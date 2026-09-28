@@ -325,7 +325,8 @@ function analyse(di) {
     st.resAvg = avg(st.subs.map((s) => s.res));
   }
   const list = Object.values(students).sort((a, b) => a.sort.localeCompare(b.sort));
-  return { drop, prev, students, list, btec };
+  const hasGrades = drop.records.some((r) => r.wag || r.tgt);
+  return { drop, prev, students, list, btec, hasGrades };
 }
 function counts(records) {
   const c = { EX: 0, GD: 0, BE: 0, n: 0, on: 0, withT: 0 };
@@ -424,20 +425,21 @@ function vOverview(A) {
       <div class="kpi"><div class="v">${A.list.length}</div><div class="k">students in ${forms.length} tutor groups</div><div class="d muted">${new Set(subs.map((s) => s.subj)).size} subjects</div></div>
       <div class="kpi"><div class="v">${pc(c.EX, c.n)}%</div><div class="k">of indicator grades are EX</div><div class="d">${pcn ? delta(pc(c.EX, c.n), pc(pcn.EX, pcn.n), ' pts') : ''}</div></div>
       <div class="kpi"><div class="v">${pc(c.BE, c.n)}%</div><div class="k">of indicator grades are BE</div><div class="d">${pcn ? delta(pc(c.BE, c.n), pc(pcn.BE, pcn.n), ' pts', true) : ''}</div></div>
-      <div class="kpi"><div class="v">${c.withT ? pc(c.on, c.withT) + '%' : '–'}</div><div class="k">of subject grades on or above target</div><div class="d">${pcn && c.withT && pcn.withT ? delta(pc(c.on, c.withT), pc(pcn.on, pcn.withT), ' pts') : ''}</div></div>
+      ${A.hasGrades ? `<div class="kpi"><div class="v">${c.withT ? pc(c.on, c.withT) + '%' : '–'}</div><div class="k">of subject grades on or above target</div><div class="d">${pcn && c.withT && pcn.withT ? delta(pc(c.on, c.withT), pc(pcn.on, pcn.withT), ' pts') : ''}</div></div>`
+        : `<div class="kpi"><div class="v">${A.list.filter((s) => s.subs.some((u) => u.ind.includes('BE'))).length}</div><div class="k">students with at least one BE</div><div class="d muted">No grades or targets in this drop</div></div>`}
     </div>
     <div class="grid g2" style="margin-top:16px">
       <div class="panel"><h2>Indicators <span class="sp"></span><span class="legend"><span><i style="background:var(--ex)"></i>EX</span><span><i style="background:var(--gd)"></i>GD</span><span><i style="background:var(--be)"></i>BE</span></span></h2>
         <div class="scrollx"><table class="t"><tr><th></th><th>${esc(A.drop.name)}</th><th class="n">EX</th><th class="n">BE</th><th>${P ? esc(P.drop.name) : ''}</th></tr>${indRows}</table></div></div>
       <div class="panel"><h2>Students of concern <span class="sp"></span><button class="btn noprint" data-go="concerns">See list</button></h2>
-        <div style="display:flex;gap:18px;align-items:baseline"><div class="kpi" style="border:0;padding:0"><div class="v" style="color:var(--be)">${flagged.length}</div></div><div class="note">students meet at least one concern rule${pFlag != null ? ` (${pFlag} at ${esc(P.drop.name)})` : ''}.<br>Rules: ${WB.settings.beMin}+ BE grades, ${WB.settings.belowMin}+ subjects below target, any subject ${WB.settings.farBelow}+ grades below, ${WB.settings.dropMin}+ indicators down since the last drop, working grades down in ${WB.settings.wagDropMin}+ subjects${attSnaps().length ? `, attendance below ${WB.settings.attMin}% or down ${WB.settings.attDrop}+ points` : ''}.</div></div>
+        <div style="display:flex;gap:18px;align-items:baseline"><div class="kpi" style="border:0;padding:0"><div class="v" style="color:var(--be)">${flagged.length}</div></div><div class="note">students meet at least one concern rule${pFlag != null ? ` (${pFlag} at ${esc(P.drop.name)})` : ''}.<br>Rules: ${WB.settings.beMin}+ BE grades${A.hasGrades ? `, ${WB.settings.belowMin}+ subjects below target, any subject ${WB.settings.farBelow}+ grades below` : ''}${A.prev ? `, ${WB.settings.dropMin}+ indicators down since the last drop` : ''}${A.hasGrades && A.prev ? `, working grades down in ${WB.settings.wagDropMin}+ subjects` : ''}${attSnaps().length ? `, attendance below ${WB.settings.attMin}% or down ${WB.settings.attDrop}+ points` : ''}.</div></div>
         <div style="margin-top:10px">${flagged.sort((a, b) => b.score - a.score).slice(0, 6).map((s) => `<div style="padding:5px 0;border-bottom:1px solid var(--line);cursor:pointer" data-sid="${esc(s.sid)}"><b>${esc(s.name)}</b> <span class="muted">${esc(s.form)}</span> ${s.reasons.map((r) => `<span class="reason ${r.cls}">${esc(r.t)}</span>`).join('')}</div>`).join('')}</div>
       </div>
     </div>
     ${attPanel}
     <div class="panel"><h2>Tutor groups</h2><div class="scrollx"><table class="t">
-      <tr><th>Form</th><th>Tutor</th><th class="n">Students</th><th>Indicators</th><th class="n">EX</th><th class="n">BE</th><th class="n">On/above target</th><th class="n">Of concern</th>${A.prev ? '<th class="n">Change</th>' : ''}${hasAtt ? `<th class="n">Attendance</th><th class="n">Below ${WB.settings.attMin}%</th>` : ''}</tr>
-      ${formRows.map((r) => `<tr class="click" data-form="${esc(r.f)}"><td><b>${esc(r.f)}</b></td><td>${esc(tutor(r.f))}</td><td class="n">${r.n}</td><td style="width:26%">${stackBar(r.fc)}</td><td class="n">${pc(r.fc.EX, r.fc.n)}%</td><td class="n">${pc(r.fc.BE, r.fc.n)}%</td><td class="n">${r.fc.withT ? pc(r.fc.on, r.fc.withT) + '%' : '–'}</td><td class="n">${r.flagged}</td>${A.prev ? `<td class="n">${r.ch == null ? '–' : resTxt(Math.round(r.ch * 100) / 100)}</td>` : ''}${hasAtt ? `<td class="n">${attTxt(r.att)}</td><td class="n">${r.attLow}</td>` : ''}</tr>`).join('')}
+      <tr><th>Form</th><th>Tutor</th><th class="n">Students</th><th>Indicators</th><th class="n">EX</th><th class="n">BE</th>${A.hasGrades ? '<th class="n">On/above target</th>' : ''}<th class="n">Of concern</th>${A.prev ? '<th class="n">Change</th>' : ''}${hasAtt ? `<th class="n">Attendance</th><th class="n">Below ${WB.settings.attMin}%</th>` : ''}</tr>
+      ${formRows.map((r) => `<tr class="click" data-form="${esc(r.f)}"><td><b>${esc(r.f)}</b></td><td>${esc(tutor(r.f))}</td><td class="n">${r.n}</td><td style="width:26%">${stackBar(r.fc)}</td><td class="n">${pc(r.fc.EX, r.fc.n)}%</td><td class="n">${pc(r.fc.BE, r.fc.n)}%</td>${A.hasGrades ? `<td class="n">${r.fc.withT ? pc(r.fc.on, r.fc.withT) + '%' : '–'}</td>` : ''}<td class="n">${r.flagged}</td>${A.prev ? `<td class="n">${r.ch == null ? '–' : resTxt(Math.round(r.ch * 100) / 100)}</td>` : ''}${hasAtt ? `<td class="n">${attTxt(r.att)}</td><td class="n">${r.attLow}</td>` : ''}</tr>`).join('')}
     </table></div>${A.prev ? '<div class="note" style="margin-top:6px">Change is the average movement in indicator grades per subject since the previous drop (EX = 3, GD = 2, BE = 1).</div>' : ''}</div>
     <div class="grid g2">
       <div class="panel"><h2>All EX</h2>${allEx.length ? `<div class="note" style="margin-bottom:6px">EX for every indicator in every subject.</div>` + allEx.map((s) => `<span class="good" style="cursor:pointer" data-sid="${esc(s.sid)}">${esc(s.name)} (${esc(s.form)})</span>`).join('') : '<div class="note">Nobody this time.</div>'}</div>
@@ -477,9 +479,9 @@ function vConcerns(A) {
 function tutorTable(A, f) {
   const st = A.list.filter((s) => s.form === f), fc = counts(st.flatMap((s) => s.subs));
   return `<div class="panel"><h2>${esc(f)} <span class="muted" style="font-weight:400;font-size:14px">${tutor(f) ? 'Tutor: ' + esc(tutor(f)) : ''} · ${st.length} students · ${esc(A.drop.name)}</span><span class="sp"></span><span style="width:220px">${stackBar(fc)}</span></h2>
-    <div class="scrollx"><table class="t"><tr><th>Student</th><th>Subjects (ATL · RtF · QoW, working at / target)</th><th>Flags</th></tr>
+    <div class="scrollx"><table class="t"><tr><th>Student</th><th>Subjects (ATL · RtF · QoW${A.hasGrades ? ', working at / target' : ''})</th><th>Flags</th></tr>
     ${st.map((s) => `<tr class="click" data-sid="${esc(s.sid)}"><td style="white-space:nowrap"><b>${esc(s.name)}</b>${s.att ? `<div class="note">Attendance ${attTxt(s.att.pct)}</div>` : ''}${s.change != null ? `<div class="note">Change ${resTxt(Math.round(s.change * 100) / 100)}</div>` : ''}</td>
-      <td>${s.subs.map((u) => `<span class="subjcell ${u.ind.includes('BE') || (u.res != null && u.res <= -1) ? 'flag' : ''}"><b>${esc(u.subj)}</b>${u.ind.map(chip).join('')} <span style="font-size:12px;margin-left:4px">${esc(u.wag || '–')} / ${esc(u.tgt || '–')}</span> ${resTxt(u.res)}</span>`).join('')}</td>
+      <td>${s.subs.map((u) => `<span class="subjcell ${u.ind.includes('BE') || (u.res != null && u.res <= -1) ? 'flag' : ''}"><b>${esc(u.subj)}</b>${u.ind.map(chip).join('')}${u.wag || u.tgt ? ` <span style="font-size:12px;margin-left:4px">${esc(u.wag || '–')} / ${esc(u.tgt || '–')}</span> ${resTxt(u.res)}` : ''}</span>`).join('')}</td>
       <td>${s.reasons.map((r) => `<span class="reason ${r.cls}">${esc(r.t)}</span>`).join('<br>') || (s.allEx ? '<span class="good">All EX</span>' : '')}</td></tr>`).join('')}
     </table></div></div>`;
 }
@@ -510,13 +512,13 @@ function vSubjects(A) {
   if (!UI.subject) {
     $('#view').innerHTML = `${printHead('Subject overview')}
       <div class="toolbar"><span class="muted">Click a subject for its student list.</span><span style="flex:1"></span><button class="btn g" onclick="window.print()">Print</button></div>
-      <div class="panel"><div class="scrollx"><table class="t"><tr><th>Subject</th><th class="n">Students</th><th>ATL</th><th>RtF</th><th>QoW</th><th class="n">BE</th><th class="n">On/above target</th><th class="n">Avg vs target</th>${P ? '<th class="n">BE change</th>' : ''}</tr>
+      <div class="panel"><div class="scrollx"><table class="t"><tr><th>Subject</th><th class="n">Students</th><th>ATL</th><th>RtF</th><th>QoW</th><th class="n">BE</th>${A.hasGrades ? '<th class="n">On/above target</th><th class="n">Avg vs target</th>' : ''}${P ? '<th class="n">BE change</th>' : ''}</tr>
       ${names.map((n) => {
         const L = bySub[n], c = counts(L);
         const per = (k) => { const cc = { EX: 0, GD: 0, BE: 0 }; L.forEach((s) => s[k] && cc[s[k]]++); return stackBar(cc); };
         const pc0 = pBy[n] ? counts(pBy[n]) : null;
         const beNow = pc(c.BE, c.n), beBefore = pc0 ? pc(pc0.BE, pc0.n) : null;
-        return `<tr class="click" data-subj="${esc(n)}"><td><b>${esc(n)}</b>${A.btec[n] ? ' <span class="muted">(BTEC)</span>' : ''}</td><td class="n">${L.length}</td><td>${per('atl')}</td><td>${per('rtf')}</td><td>${per('qow')}</td><td class="n">${beNow}%</td><td class="n">${c.withT ? pc(c.on, c.withT) + '%' : '–'}</td><td class="n">${resTxt(avg(L.map((s) => s.res)) == null ? null : Math.round(avg(L.map((s) => s.res)) * 100) / 100)}</td>${P ? `<td class="n">${beBefore == null ? '–' : `<span class="${beNow > beBefore ? 'down' : beNow < beBefore ? 'up' : 'muted'}">${beNow - beBefore > 0 ? '+' : ''}${beNow - beBefore} pts</span>`}</td>` : ''}</tr>`;
+        return `<tr class="click" data-subj="${esc(n)}"><td><b>${esc(n)}</b>${A.btec[n] ? ' <span class="muted">(BTEC)</span>' : ''}</td><td class="n">${L.length}</td><td>${per('atl')}</td><td>${per('rtf')}</td><td>${per('qow')}</td><td class="n">${beNow}%</td>${A.hasGrades ? `<td class="n">${c.withT ? pc(c.on, c.withT) + '%' : '–'}</td><td class="n">${resTxt(avg(L.map((s) => s.res)) == null ? null : Math.round(avg(L.map((s) => s.res)) * 100) / 100)}</td>` : ''}${P ? `<td class="n">${beBefore == null ? '–' : `<span class="${beNow > beBefore ? 'down' : beNow < beBefore ? 'up' : 'muted'}">${beNow - beBefore > 0 ? '+' : ''}${beNow - beBefore} pts</span>`}</td>` : ''}</tr>`;
       }).join('')}</table></div>
       <div class="legend" style="margin-top:8px"><span><i style="background:var(--ex)"></i>EX</span><span><i style="background:var(--gd)"></i>GD</span><span><i style="background:var(--be)"></i>BE</span></div></div>`;
     $$('[data-subj]').forEach((el) => el.onclick = () => { UI.subject = el.dataset.subj; render(); });
@@ -530,15 +532,15 @@ function vSubjects(A) {
       <div class="kpi"><div class="v">${L.length}</div><div class="k">Year 12 students</div></div>
       <div class="kpi"><div class="v">${pc(c.EX, c.n)}%</div><div class="k">indicator grades EX</div></div>
       <div class="kpi"><div class="v">${pc(c.BE, c.n)}%</div><div class="k">indicator grades BE</div></div>
-      <div class="kpi"><div class="v">${c.withT ? pc(c.on, c.withT) + '%' : '–'}</div><div class="k">on or above target</div></div>
+      ${A.hasGrades ? `<div class="kpi"><div class="v">${c.withT ? pc(c.on, c.withT) + '%' : '–'}</div><div class="k">on or above target</div></div>` : `<div class="kpi"><div class="v">${L.filter((s) => s.ind.includes('BE')).length}</div><div class="k">students with at least one BE</div></div>`}
     </div>
     <div class="panel" style="margin-top:16px"><h2>${esc(UI.subject)} students <span class="muted" style="font-size:13px;font-weight:400">lowest indicators first</span></h2><div class="scrollx"><table class="t">
-      <tr><th>Student</th><th>Form</th><th>ATL</th><th>RtF</th><th>QoW</th>${A.prev ? '<th>Last drop</th>' : ''}<th>Working at</th><th>Target</th><th class="n">vs target</th></tr>
-      ${L.map((s) => `<tr class="click" data-sid="${esc(s.sid)}"><td><b>${esc(s.name)}</b></td><td>${esc(s.form)}</td><td>${chip(s.atl)}</td><td>${chip(s.rtf)}</td><td>${chip(s.qow)}</td>${A.prev ? `<td>${s.prev ? IND.map((k) => chip(s.prev[k])).join('') : '<span class="muted">new</span>'}</td>` : ''}<td>${esc(s.wag || '–')}</td><td>${esc(s.tgt || '–')}</td><td class="n">${resTxt(s.res)}</td></tr>`).join('')}
+      <tr><th>Student</th><th>Form</th><th>ATL</th><th>RtF</th><th>QoW</th>${A.prev ? '<th>Last drop</th>' : ''}${A.hasGrades ? '<th>Working at</th><th>Target</th><th class="n">vs target</th>' : ''}</tr>
+      ${L.map((s) => `<tr class="click" data-sid="${esc(s.sid)}"><td><b>${esc(s.name)}</b></td><td>${esc(s.form)}</td><td>${chip(s.atl)}</td><td>${chip(s.rtf)}</td><td>${chip(s.qow)}</td>${A.prev ? `<td>${s.prev ? IND.map((k) => chip(s.prev[k])).join('') : '<span class="muted">new</span>'}</td>` : ''}${A.hasGrades ? `<td>${esc(s.wag || '–')}</td><td>${esc(s.tgt || '–')}</td><td class="n">${resTxt(s.res)}</td>` : ''}</tr>`).join('')}
     </table></div></div>`;
   $('#sBack').onclick = () => { UI.subject = null; render(); };
   $('#sPick').onchange = (e) => { UI.subject = e.target.value; render(); };
-  $('#sCsv').onclick = () => downloadCsv(`${UI.subject}-${A.drop.name}.csv`, [['Student', 'Form', 'ATL', 'RtF', 'QoW', 'Working at', 'Target'], ...L.map((s) => [s.name, s.form, s.atl, s.rtf, s.qow, s.wag, s.tgt])]);
+  $('#sCsv').onclick = () => downloadCsv(`${UI.subject}-${A.drop.name}.csv`, [['Student', 'Form', 'ATL', 'RtF', 'QoW', ...(A.hasGrades ? ['Working at', 'Target'] : [])], ...L.map((s) => [s.name, s.form, s.atl, s.rtf, s.qow, ...(A.hasGrades ? [s.wag, s.tgt] : [])])]);
   bindCommon();
 }
 
@@ -568,12 +570,12 @@ function vStudent(A) {
         ${s.reasons.length ? s.reasons.map((r) => `<div style="margin:3px 0"><span class="reason ${r.cls}">${esc(r.t)}</span> <span class="note">${esc(r.d)}</span></div>`).join('') : s.allEx ? '<span class="good">EX in every indicator, every subject</span>' : '<span class="note">No concern rules met.</span>'}
       </div>
       <div class="panel"><h2>Subjects</h2><div class="scrollx"><table class="t">
-        <tr><th>Subject</th><th>ATL</th><th>RtF</th><th>QoW</th><th>Working at</th><th>Target</th><th class="n">vs target</th><th>Indicator trend</th></tr>
-        ${s.subs.map((u) => `<tr><td><b>${esc(u.subj)}</b></td><td>${chip(u.atl)}</td><td>${chip(u.rtf)}</td><td>${chip(u.qow)}</td><td>${esc(u.wag || '–')}</td><td>${esc(u.tgt || '–')}</td><td class="n">${resTxt(u.res)}</td><td>${spark(hist.map((m) => (m[u.subj] ? avg(IND.map((k) => IND_VAL[m[u.subj][k]])) : null)))}</td></tr>`).join('')}
+        <tr><th>Subject</th><th>ATL</th><th>RtF</th><th>QoW</th>${A.hasGrades ? '<th>Working at</th><th>Target</th><th class="n">vs target</th>' : ''}<th>Indicator trend</th></tr>
+        ${s.subs.map((u) => `<tr><td><b>${esc(u.subj)}</b></td><td>${chip(u.atl)}</td><td>${chip(u.rtf)}</td><td>${chip(u.qow)}</td>${A.hasGrades ? `<td>${esc(u.wag || '–')}</td><td>${esc(u.tgt || '–')}</td><td class="n">${resTxt(u.res)}</td>` : ''}<td>${spark(hist.map((m) => (m[u.subj] ? avg(IND.map((k) => IND_VAL[m[u.subj][k]])) : null)))}</td></tr>`).join('')}
       </table></div></div>
       ${drops.length > 1 ? `<div class="panel"><h2>History</h2><div class="scrollx"><table class="t"><tr><th>Subject</th>${drops.map((d) => `<th>${esc(d.name)}</th>`).join('')}</tr>
         ${s.subs.map((u) => `<tr><td><b>${esc(u.subj)}</b></td>${hist.map((m) => `<td>${m[u.subj] ? IND.map((k) => chip(m[u.subj][k])).join('') + ` <span style="font-size:12px">${esc(m[u.subj].wag || '')}</span>` : '<span class="muted">–</span>'}</td>`).join('')}</tr>`).join('')}
-      </table></div><div class="note">Chips show ATL, RtF and QoW, followed by the working-at grade.</div></div>` : ''}`;
+      </table></div><div class="note">Chips show ATL, RtF and QoW, followed by the working-at grade where there is one.</div></div>` : ''}`;
   }
   $('#view').innerHTML = `<div class="toolbar"><input id="stSearch" list="stList" placeholder="Type a student's name" style="width:320px" value="${s ? esc(s.name + ' (' + s.form + ')') : ''}"><datalist id="stList">${opts}</datalist>
     ${s ? '<button class="btn" id="stPrev">← Previous</button><button class="btn" id="stNext">Next →</button>' : ''}</div>${body}`;
@@ -703,7 +705,7 @@ function openGrades() {
   IMP = { kind: 'grades' };
   modal(`<div class="mh"><h2>Add a data drop</h2><button class="btn" data-close>Cancel</button></div>
     <div class="mb"><div class="steps"><span class="on">1 Choose file</span><span>2 Match columns</span><span>3 Check and add</span></div>
-      <p>Export a marksheet from the MIS as <b>CSV or Excel</b>, with one row per student (subjects across the columns) or one row per student per subject. It needs student names, tutor group, and some of: ATL, Response to Feedback, Quality of Work, working-at grade and target grade.</p>
+      <p>Export a marksheet from the MIS as <b>CSV or Excel</b>, with one row per student (subjects across the columns) or one row per student per subject. It needs student names, tutor group and the three indicators. Working-at and target grades are optional (the Settling-in Review has none).</p>
       <input type="file" id="impFile" accept=".csv,.xlsx,.xls,.txt">
       <div class="note" style="margin-top:10px">The file is read by this page only. It isn't uploaded anywhere.</div>
     </div>`);

@@ -33,7 +33,7 @@ Attendance is linked to the grades data by name and tutor group. Anyone who does
 
 ## Each data drop (about 2 minutes)
 
-1. Export the marksheet from the MIS as CSV or Excel. It needs student names (or surname and forename), tutor group, and the indicator and grade columns. An admission number or UPN is optional, but it helps link students across drops.
+1. Export the marksheet from the MIS as CSV or Excel. It needs student names (or surname and forename), tutor group and the three indicators. Working-at and target grades are optional: the **Settling-in Review** has none, so that drop just shows indicators, and the grade columns, grade rules and "on target" figures appear from the first drop that includes grades. An admission number or UPN is optional, but it helps link students across drops.
 2. Open the dashboard, then **Open workbook** (your saved file).
 3. Click **+ Add data**, choose **Grades data drop** and pick the export. The dashboard matches the columns automatically. Check the subject names and measures, name the drop (e.g. "Assessment Report 1") and click **Add**.
 4. Click **Save workbook** and replace the old file on OneDrive.
