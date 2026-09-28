@@ -22,7 +22,7 @@ Turns each data drop's MIS marksheet export into a dashboard for the Year 12 tea
 
 **Concern rules** (change them in Settings): 2+ BE grades; 2+ subjects 1 grade or more below target; any subject 2+ grades below target; 3+ indicator grades down since the last drop; working grade down in 2+ subjects.
 
-The dashboard uses blue for EX, light blue for GD and orange for BE. It's not a RAG rating.
+The dashboard uses the school purple: dark purple for EX, light purple for GD and orange for BE. It is not a RAG rating.
 
 ## Each data drop (about 2 minutes)
 
