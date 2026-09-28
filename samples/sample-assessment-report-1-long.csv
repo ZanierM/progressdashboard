@@ -1,0 +1,568 @@
+Student,Reg,Adno,Subject,ATL,RtF,QoW,Current Grade,MEG
+"Phillips, Hannah",12A,2024001,Biology,EX,EX,EX,A*,A
+"Phillips, Hannah",12A,2024001,Economics,GD,GD,GD,A,A
+"Phillips, Hannah",12A,2024001,Photography,GD,GD,GD,A,A
+"Marshall, Tom",12A,2024002,Politics,GD,GD,GD,A,A*
+"Marshall, Tom",12A,2024002,Art,GD,GD,GD,A*,A*
+"Marshall, Tom",12A,2024002,Mathematics,GD,GD,GD,A*,A*
+"Hughes, Aisha",12A,2024003,Business,GD,GD,EX,A*,A
+"Hughes, Aisha",12A,2024003,History,EX,GD,GD,A,A
+"Hughes, Aisha",12A,2024003,Mathematics,GD,GD,GD,A*,A
+"Hughes, Oliver",12A,2024004,Economics,EX,EX,EX,A*,A
+"Hughes, Oliver",12A,2024004,Sociology,EX,GD,EX,A,A
+"Hughes, Oliver",12A,2024004,Geography,EX,EX,EX,A,A
+"Mensah, Jess",12A,2024005,Geography,GD,GD,GD,A*,A
+"Mensah, Jess",12A,2024005,English Literature,GD,EX,GD,A,A
+"Mensah, Jess",12A,2024005,BTEC Applied Science,EX,GD,GD,D*,D
+"Adeyemi, Ben",12A,2024006,English Literature,EX,EX,EX,A*,A
+"Adeyemi, Ben",12A,2024006,Politics,EX,EX,EX,A*,A
+"Adeyemi, Ben",12A,2024006,Mathematics,EX,EX,GD,A*,A
+"Turner, Olivia",12A,2024007,Politics,EX,EX,GD,A,A
+"Turner, Olivia",12A,2024007,Spanish,GD,GD,GD,A,A
+"Turner, Olivia",12A,2024007,Sociology,EX,GD,GD,A,A
+"Green, Erin",12A,2024008,Politics,EX,GD,EX,B,B
+"Green, Erin",12A,2024008,Economics,GD,GD,GD,C,B
+"Green, Erin",12A,2024008,Psychology,EX,EX,GD,B,B
+"Jackson, Layla",12A,2024009,Chemistry,GD,GD,GD,A,A
+"Jackson, Layla",12A,2024009,Criminology,GD,GD,GD,A,A
+"Jackson, Layla",12A,2024009,Politics,GD,GD,GD,A,A
+"Graham, Jess",12A,2024010,Computer Science,BE,BE,BE,A*,A*
+"Graham, Jess",12A,2024010,History,BE,BE,BE,A*,A*
+"Graham, Jess",12A,2024010,Business,GD,BE,BE,A,A*
+"Graham, Jess",12A,2024010,Geography,BE,BE,BE,B,A*
+"Clarke, Callum",12A,2024011,Sociology,EX,EX,GD,A,A
+"Clarke, Callum",12A,2024011,Biology,EX,GD,GD,A,A
+"Clarke, Callum",12A,2024011,Spanish,GD,GD,GD,A,A
+"Graham, Kian",12A,2024012,Business,GD,GD,GD,D,C
+"Graham, Kian",12A,2024012,Politics,BE,BE,BE,C,C
+"Graham, Kian",12A,2024012,French,GD,GD,GD,B,C
+"Graham, Kian",12A,2024012,Biology,GD,GD,GD,C,C
+"Patel, Arjun",12A,2024013,Religious Studies,GD,GD,GD,B,A
+"Patel, Arjun",12A,2024013,Photography,GD,GD,GD,A,A
+"Patel, Arjun",12A,2024013,Sociology,GD,GD,GD,A,A
+"Sandhu, Holly",12A,2024014,Geography,GD,GD,GD,A*,A
+"Sandhu, Holly",12A,2024014,Computer Science,EX,EX,EX,A,A
+"Sandhu, Holly",12A,2024014,Business,EX,GD,EX,A,A
+"Davies, Oliver",12A,2024015,Computer Science,GD,GD,GD,B,A
+"Davies, Oliver",12A,2024015,Religious Studies,GD,GD,GD,B,A
+"Davies, Oliver",12A,2024015,English Literature,GD,GD,GD,B,A
+"Mensah, Rohan",12A,2024016,French,GD,GD,GD,A,A
+"Mensah, Rohan",12A,2024016,Mathematics,GD,GD,GD,A,A
+"Mensah, Rohan",12A,2024016,English Literature,GD,GD,GD,A,A
+"Roberts, Hannah",12A,2024017,French,GD,GD,GD,B,B
+"Roberts, Hannah",12A,2024017,Photography,GD,GD,GD,B,B
+"Roberts, Hannah",12A,2024017,Computer Science,GD,GD,GD,A,B
+"Chen, Megan",12A,2024018,Sociology,BE,BE,GD,C,B
+"Chen, Megan",12A,2024018,Mathematics,GD,GD,GD,B,B
+"Chen, Megan",12A,2024018,Spanish,GD,GD,GD,B,B
+"Lewis, Lily",12A,2024019,Religious Studies,EX,EX,EX,A*,A
+"Lewis, Lily",12A,2024019,Chemistry,EX,GD,GD,A,A
+"Lewis, Lily",12A,2024019,Politics,EX,EX,EX,A*,A
+"Green, Hannah",12A,2024020,English Literature,GD,GD,GD,C,C
+"Green, Hannah",12A,2024020,French,EX,GD,GD,C,C
+"Green, Hannah",12A,2024020,Business,EX,GD,GD,D,C
+"Ward, Zara",12A,2024021,Mathematics,EX,EX,EX,B,B
+"Ward, Zara",12A,2024021,History,EX,EX,EX,B,B
+"Ward, Zara",12A,2024021,Art,EX,EX,EX,A,B
+"Ward, Zara",12A,2024021,BTEC Applied Science,EX,EX,GD,M,M
+"Young, Ava",12A,2024022,Spanish,GD,GD,GD,A,A
+"Young, Ava",12A,2024022,Sociology,GD,GD,GD,A,A
+"Young, Ava",12A,2024022,Mathematics,GD,GD,GD,B,A
+"Phillips, Lily",12A,2024023,Psychology,EX,EX,GD,A*,A*
+"Phillips, Lily",12A,2024023,French,EX,EX,EX,A*,A*
+"Phillips, Lily",12A,2024023,Sociology,GD,GD,GD,A*,A*
+"Phillips, Lily",12A,2024023,Art,GD,GD,GD,A*,A*
+"Patel, Samuel",12A,2024024,Mathematics,GD,GD,GD,C,C
+"Patel, Samuel",12A,2024024,Physics,EX,GD,GD,C,C
+"Patel, Samuel",12A,2024024,Spanish,EX,EX,GD,B,C
+"Mason, Hannah",12A,2024025,English Literature,GD,GD,GD,B,B
+"Mason, Hannah",12A,2024025,Computer Science,GD,BE,BE,C,B
+"Mason, Hannah",12A,2024025,Physics,BE,GD,BE,B,B
+"Edwards, Ethan",12A,2024026,Spanish,GD,GD,EX,C,C
+"Edwards, Ethan",12A,2024026,Physics,GD,GD,GD,C,C
+"Edwards, Ethan",12A,2024026,French,EX,EX,EX,C,C
+"Hussain, Sienna",12C,2024027,Mathematics,EX,GD,GD,B,B
+"Hussain, Sienna",12C,2024027,Computer Science,GD,EX,GD,B,B
+"Hussain, Sienna",12C,2024027,Geography,GD,GD,GD,C,B
+"Nowak, Ella",12C,2024028,Art,GD,GD,GD,A,A
+"Nowak, Ella",12C,2024028,History,EX,EX,EX,A,A
+"Nowak, Ella",12C,2024028,Spanish,GD,GD,GD,A,A
+"Nowak, Ella",12C,2024028,Religious Studies,GD,GD,GD,A,A
+"Walker, Daniel",12C,2024029,Criminology,EX,EX,GD,A,B
+"Walker, Daniel",12C,2024029,History,EX,EX,EX,A,B
+"Walker, Daniel",12C,2024029,Mathematics,EX,EX,EX,A,B
+"Davies, Lily",12C,2024030,Mathematics,EX,GD,EX,A*,A*
+"Davies, Lily",12C,2024030,Chemistry,EX,EX,GD,A*,A*
+"Davies, Lily",12C,2024030,Biology,EX,EX,EX,A*,A*
+"Green, Adam",12C,2024031,Politics,GD,GD,BE,A,A
+"Green, Adam",12C,2024031,Religious Studies,GD,GD,GD,A,A
+"Green, Adam",12C,2024031,Criminology,GD,GD,GD,A,A
+"Green, Adam",12C,2024031,Photography,GD,GD,GD,B,A
+"Young, Evie",12C,2024032,Spanish,GD,GD,GD,E,C
+"Young, Evie",12C,2024032,Photography,GD,BE,BE,C,C
+"Young, Evie",12C,2024032,Geography,GD,GD,GD,C,C
+"Mensah, Grace",12C,2024033,Sociology,GD,GD,GD,A*,A
+"Mensah, Grace",12C,2024033,Spanish,EX,GD,GD,A,A
+"Mensah, Grace",12C,2024033,Chemistry,GD,GD,GD,A,A
+"Cooper, Lily",12C,2024034,Computer Science,EX,GD,EX,A*,A*
+"Cooper, Lily",12C,2024034,Art,EX,EX,GD,A*,A*
+"Cooper, Lily",12C,2024034,Sociology,EX,EX,EX,A*,A*
+"Graham, Nadia",12C,2024035,French,GD,GD,GD,A,B
+"Graham, Nadia",12C,2024035,Politics,EX,GD,GD,B,B
+"Graham, Nadia",12C,2024035,Mathematics,GD,GD,GD,B,B
+"Lewis, Daniel",12C,2024036,Photography,GD,GD,GD,C,C
+"Lewis, Daniel",12C,2024036,Economics,GD,GD,GD,C,C
+"Lewis, Daniel",12C,2024036,Chemistry,GD,GD,GD,D,C
+"Brooks, Sophia",12C,2024037,Sociology,GD,GD,GD,B,B
+"Brooks, Sophia",12C,2024037,Mathematics,EX,GD,GD,B,B
+"Brooks, Sophia",12C,2024037,BTEC Applied Science,EX,EX,EX,M,M
+"Foster, Maya",12C,2024038,Art,GD,GD,GD,C,C
+"Foster, Maya",12C,2024038,English Literature,GD,GD,GD,C,C
+"Foster, Maya",12C,2024038,Photography,GD,GD,GD,C,C
+"Chen, Isaac",12C,2024039,Mathematics,GD,GD,BE,A,A
+"Chen, Isaac",12C,2024039,French,GD,GD,GD,A,A
+"Chen, Isaac",12C,2024039,Politics,GD,GD,GD,A,A
+"Turner, Jess",12C,2024040,Computer Science,EX,GD,GD,B,B
+"Turner, Jess",12C,2024040,Geography,EX,GD,EX,A,B
+"Turner, Jess",12C,2024040,Physics,GD,GD,GD,B,B
+"Evans, Joel",12C,2024041,Geography,GD,GD,GD,A*,A
+"Evans, Joel",12C,2024041,Spanish,GD,GD,GD,B,A
+"Evans, Joel",12C,2024041,Physics,GD,GD,GD,A,A
+"Price, Samuel",12C,2024042,Business,GD,GD,GD,C,B
+"Price, Samuel",12C,2024042,Computer Science,GD,GD,BE,C,B
+"Price, Samuel",12C,2024042,Geography,GD,GD,GD,B,B
+"Walker, Amelia",12C,2024043,Sociology,BE,BE,BE,B,A
+"Walker, Amelia",12C,2024043,French,BE,BE,BE,B,A
+"Walker, Amelia",12C,2024043,Biology,GD,BE,BE,B,A
+"Walker, Amelia",12C,2024043,Geography,BE,BE,BE,C,A
+"Wright, Daniel",12C,2024044,Biology,EX,EX,EX,A,A
+"Wright, Daniel",12C,2024044,Economics,EX,EX,EX,A*,A
+"Wright, Daniel",12C,2024044,Spanish,EX,EX,EX,A,A
+"Nowak, Arjun",12C,2024045,French,GD,GD,GD,B,B
+"Nowak, Arjun",12C,2024045,Physics,GD,GD,GD,C,B
+"Nowak, Arjun",12C,2024045,Computer Science,GD,GD,GD,B,B
+"Nowak, Arjun",12C,2024045,Politics,EX,EX,GD,B,B
+"Harris, Luca",12C,2024046,Business,EX,EX,GD,C,C
+"Harris, Luca",12C,2024046,English Literature,GD,GD,GD,C,C
+"Harris, Luca",12C,2024046,Economics,GD,GD,GD,C,C
+"Kelly, Ella",12C,2024047,Business,GD,GD,GD,A*,A*
+"Kelly, Ella",12C,2024047,Geography,GD,GD,GD,A,A*
+"Kelly, Ella",12C,2024047,Psychology,GD,GD,GD,A*,A*
+"Mitchell, Poppy",12C,2024048,History,GD,BE,BE,B,B
+"Mitchell, Poppy",12C,2024048,Mathematics,GD,BE,BE,A,B
+"Mitchell, Poppy",12C,2024048,Sociology,BE,GD,BE,C,B
+"Carter, Maya",12C,2024049,Sociology,GD,GD,GD,B,B
+"Carter, Maya",12C,2024049,French,GD,GD,GD,B,B
+"Carter, Maya",12C,2024049,Psychology,GD,GD,GD,B,B
+"Carter, Rohan",12C,2024050,Spanish,EX,GD,GD,A*,A
+"Carter, Rohan",12C,2024050,History,GD,GD,EX,A*,A
+"Carter, Rohan",12C,2024050,Photography,EX,GD,GD,A,A
+"Taylor, Sienna",12C,2024051,Religious Studies,GD,GD,GD,B,B
+"Taylor, Sienna",12C,2024051,Psychology,GD,GD,GD,B,B
+"Taylor, Sienna",12C,2024051,French,GD,GD,GD,B,B
+"Carter, Ella",12C,2024052,French,GD,GD,GD,D,C
+"Carter, Ella",12C,2024052,Mathematics,GD,GD,GD,C,C
+"Carter, Ella",12C,2024052,Photography,GD,GD,GD,C,C
+"Foster, Max",12D,2024053,Criminology,GD,GD,GD,A*,A*
+"Foster, Max",12D,2024053,Business,GD,GD,GD,A*,A*
+"Foster, Max",12D,2024053,Psychology,GD,GD,GD,A*,A*
+"Turner, Sienna",12D,2024054,Mathematics,GD,GD,GD,B,B
+"Turner, Sienna",12D,2024054,Biology,BE,BE,BE,C,B
+"Turner, Sienna",12D,2024054,Criminology,BE,BE,BE,C,B
+"Campbell, Freya",12D,2024055,Art,GD,GD,GD,A,A
+"Campbell, Freya",12D,2024055,Mathematics,EX,GD,GD,A,A
+"Campbell, Freya",12D,2024055,History,GD,GD,EX,A,A
+"Mason, Ruby",12D,2024056,English Literature,EX,EX,EX,A*,A*
+"Mason, Ruby",12D,2024056,Spanish,EX,EX,EX,A*,A*
+"Mason, Ruby",12D,2024056,Chemistry,EX,EX,EX,A*,A*
+"Mason, Ruby",12D,2024056,Psychology,EX,EX,EX,A*,A*
+"King, Jack",12D,2024057,Psychology,EX,EX,EX,A*,A*
+"King, Jack",12D,2024057,Physics,EX,EX,EX,A*,A*
+"King, Jack",12D,2024057,Mathematics,EX,EX,EX,A*,A*
+"Green, Daniel",12D,2024058,Psychology,GD,GD,GD,B,B
+"Green, Daniel",12D,2024058,Chemistry,GD,GD,GD,B,B
+"Green, Daniel",12D,2024058,Art,EX,EX,GD,B,B
+"Phillips, Aisha",12D,2024059,English Literature,EX,EX,GD,B,B
+"Phillips, Aisha",12D,2024059,French,EX,EX,GD,A,B
+"Phillips, Aisha",12D,2024059,Computer Science,EX,EX,EX,C,B
+"Kaur, Poppy",12D,2024060,French,GD,GD,GD,B,A
+"Kaur, Poppy",12D,2024060,Geography,GD,GD,GD,A,A
+"Kaur, Poppy",12D,2024060,Photography,GD,GD,GD,A,A
+"Gill, Jess",12D,2024061,Geography,EX,GD,GD,B,B
+"Gill, Jess",12D,2024061,Mathematics,EX,GD,GD,B,B
+"Gill, Jess",12D,2024061,Criminology,GD,GD,GD,B,B
+"Gill, Jess",12D,2024061,Business,GD,GD,GD,B,B
+"Dhillon, Sophia",12D,2024062,Religious Studies,GD,GD,GD,B,B
+"Dhillon, Sophia",12D,2024062,Psychology,EX,EX,EX,B,B
+"Dhillon, Sophia",12D,2024062,Computer Science,GD,GD,GD,A,B
+"Dhillon, Sophia",12D,2024062,Economics,EX,GD,EX,B,B
+"Owen, Isaac",12D,2024063,Spanish,EX,GD,GD,B,B
+"Owen, Isaac",12D,2024063,English Literature,GD,GD,GD,B,B
+"Owen, Isaac",12D,2024063,Photography,GD,GD,GD,B,B
+"Owen, Isaac",12D,2024063,Religious Studies,GD,GD,GD,B,B
+"Carter, Lily",12D,2024064,Criminology,GD,EX,GD,B,A
+"Carter, Lily",12D,2024064,Business,GD,EX,EX,A,A
+"Carter, Lily",12D,2024064,Economics,EX,EX,GD,A,A
+"Collins, Adam",12D,2024065,Sociology,EX,EX,GD,A,B
+"Collins, Adam",12D,2024065,Biology,GD,GD,GD,C,B
+"Collins, Adam",12D,2024065,Computer Science,GD,GD,GD,B,B
+"Collins, Adam",12D,2024065,Religious Studies,GD,GD,GD,B,B
+"James, Evie",12D,2024066,History,EX,EX,EX,B,C
+"James, Evie",12D,2024066,French,EX,EX,EX,C,C
+"James, Evie",12D,2024066,Photography,EX,EX,EX,D,C
+"Clarke, Ava",12D,2024067,Sociology,GD,GD,EX,B,B
+"Clarke, Ava",12D,2024067,Geography,GD,GD,GD,B,B
+"Clarke, Ava",12D,2024067,Spanish,GD,GD,GD,B,B
+"Ward, Hannah",12D,2024068,Politics,EX,GD,EX,C,C
+"Ward, Hannah",12D,2024068,Psychology,GD,GD,GD,C,C
+"Ward, Hannah",12D,2024068,Sociology,GD,GD,GD,C,C
+"Baker, Samuel",12D,2024069,Criminology,GD,GD,GD,B,B
+"Baker, Samuel",12D,2024069,Mathematics,GD,GD,GD,A,B
+"Baker, Samuel",12D,2024069,BTEC Applied Science,GD,GD,GD,M,M
+"Shah, Samuel",12D,2024070,Criminology,GD,GD,GD,B,B
+"Shah, Samuel",12D,2024070,Mathematics,GD,GD,GD,B,B
+"Shah, Samuel",12D,2024070,Chemistry,GD,GD,GD,C,B
+"Jackson, Freya",12D,2024071,Chemistry,EX,EX,GD,A*,A*
+"Jackson, Freya",12D,2024071,Spanish,EX,EX,GD,A*,A*
+"Jackson, Freya",12D,2024071,BTEC Applied Science,EX,GD,GD,D*,D*
+"Brooks, Ivy",12D,2024072,Geography,EX,EX,EX,C,C
+"Brooks, Ivy",12D,2024072,Mathematics,EX,EX,EX,B,C
+"Brooks, Ivy",12D,2024072,Biology,EX,GD,GD,C,C
+"Young, Freya",12D,2024073,French,GD,GD,GD,B,B
+"Young, Freya",12D,2024073,Art,GD,GD,GD,B,B
+"Young, Freya",12D,2024073,Economics,GD,GD,GD,B,B
+"Foster, Joel",12D,2024074,English Literature,GD,GD,GD,A*,A*
+"Foster, Joel",12D,2024074,Sociology,GD,EX,GD,A*,A*
+"Foster, Joel",12D,2024074,Psychology,GD,GD,GD,A*,A*
+"Wood, Lily",12D,2024075,Criminology,EX,GD,GD,A*,A
+"Wood, Lily",12D,2024075,Mathematics,EX,GD,GD,A,A
+"Wood, Lily",12D,2024075,English Literature,EX,EX,GD,A,A
+"Wood, Lily",12D,2024075,Biology,GD,GD,GD,A*,A
+"Wood, Priya",12D,2024076,Biology,GD,EX,EX,B,B
+"Wood, Priya",12D,2024076,Mathematics,EX,EX,EX,B,B
+"Wood, Priya",12D,2024076,English Literature,EX,EX,EX,A,B
+"Wright, Finn",12D,2024077,Mathematics,EX,GD,EX,A*,A*
+"Wright, Finn",12D,2024077,Physics,GD,GD,GD,A*,A*
+"Wright, Finn",12D,2024077,Business,GD,GD,GD,A*,A*
+"Hughes, Jess",12D,2024078,English Literature,GD,GD,GD,A*,A*
+"Hughes, Jess",12D,2024078,Religious Studies,GD,BE,GD,A,A*
+"Hughes, Jess",12D,2024078,BTEC Applied Science,GD,GD,GD,D*,D*
+"Davies, Luca",12D,2024079,Psychology,GD,GD,GD,A*,A
+"Davies, Luca",12D,2024079,English Literature,GD,GD,GD,B,A
+"Davies, Luca",12D,2024079,Religious Studies,GD,GD,GD,A,A
+"Wood, Ella",12L,2024080,Business,GD,BE,BE,B,B
+"Wood, Ella",12L,2024080,Biology,BE,BE,BE,C,B
+"Wood, Ella",12L,2024080,Mathematics,BE,GD,BE,B,B
+"Hussain, Evie",12L,2024081,Religious Studies,GD,GD,GD,A,A
+"Hussain, Evie",12L,2024081,Mathematics,GD,GD,GD,A,A
+"Hussain, Evie",12L,2024081,French,EX,GD,GD,A,A
+"Collins, Tilly",12L,2024082,Photography,GD,GD,GD,A*,A
+"Collins, Tilly",12L,2024082,Chemistry,GD,GD,GD,B,A
+"Collins, Tilly",12L,2024082,Spanish,GD,GD,GD,A,A
+"Young, Erin",12L,2024083,Physics,GD,GD,GD,B,B
+"Young, Erin",12L,2024083,Photography,GD,GD,GD,B,B
+"Young, Erin",12L,2024083,Sociology,GD,GD,GD,C,B
+"Young, Erin",12L,2024083,Mathematics,GD,GD,GD,C,B
+"Morgan, Zara",12L,2024084,Computer Science,EX,EX,GD,A,B
+"Morgan, Zara",12L,2024084,Politics,GD,GD,GD,B,B
+"Morgan, Zara",12L,2024084,Criminology,GD,GD,GD,B,B
+"Singh, Oliver",12L,2024085,Economics,GD,GD,BE,C,B
+"Singh, Oliver",12L,2024085,Art,GD,GD,GD,B,B
+"Singh, Oliver",12L,2024085,Politics,GD,GD,GD,C,B
+"Fisher, Grace",12L,2024086,Sociology,GD,GD,GD,A*,A
+"Fisher, Grace",12L,2024086,Art,GD,GD,GD,A,A
+"Fisher, Grace",12L,2024086,Chemistry,GD,GD,GD,B,A
+"Ahmed, Erin",12L,2024087,Mathematics,GD,GD,GD,D,C
+"Ahmed, Erin",12L,2024087,Spanish,EX,EX,EX,C,C
+"Ahmed, Erin",12L,2024087,Geography,GD,GD,GD,C,C
+"Scott, Holly",12L,2024088,Computer Science,EX,EX,EX,C,B
+"Scott, Holly",12L,2024088,Art,EX,EX,GD,B,B
+"Scott, Holly",12L,2024088,French,EX,EX,EX,A,B
+"Scott, Holly",12L,2024088,Religious Studies,GD,GD,GD,B,B
+"Scott, Sienna",12L,2024089,Art,EX,EX,EX,A,B
+"Scott, Sienna",12L,2024089,Religious Studies,EX,EX,EX,B,B
+"Scott, Sienna",12L,2024089,Photography,EX,EX,GD,B,B
+"Young, Hannah",12L,2024090,Spanish,EX,EX,EX,A*,A*
+"Young, Hannah",12L,2024090,Chemistry,EX,GD,GD,A*,A*
+"Young, Hannah",12L,2024090,Sociology,GD,GD,GD,A*,A*
+"Young, Hannah",12L,2024090,Mathematics,GD,EX,GD,A*,A*
+"Mason, Ella",12L,2024091,Mathematics,EX,GD,GD,A*,A*
+"Mason, Ella",12L,2024091,Spanish,GD,GD,GD,A*,A*
+"Mason, Ella",12L,2024091,Business,GD,GD,GD,A,A*
+"Sandhu, Layla",12L,2024092,Economics,EX,EX,GD,B,B
+"Sandhu, Layla",12L,2024092,Religious Studies,EX,EX,EX,A,B
+"Sandhu, Layla",12L,2024092,Psychology,EX,EX,EX,B,B
+"Sandhu, Layla",12L,2024092,Geography,GD,EX,EX,B,B
+"Price, Ella",12L,2024093,Geography,EX,EX,EX,B,C
+"Price, Ella",12L,2024093,Art,EX,EX,EX,C,C
+"Price, Ella",12L,2024093,Criminology,EX,EX,GD,C,C
+"Sandhu, Ethan",12L,2024094,French,EX,GD,GD,A,A
+"Sandhu, Ethan",12L,2024094,Mathematics,GD,GD,GD,A,A
+"Sandhu, Ethan",12L,2024094,Photography,EX,GD,EX,A,A
+"Owen, Callum",12L,2024095,Computer Science,GD,GD,GD,B,A
+"Owen, Callum",12L,2024095,History,GD,GD,GD,B,A
+"Owen, Callum",12L,2024095,Spanish,GD,GD,BE,B,A
+"Roberts, Ben",12L,2024096,Business,EX,EX,EX,C,C
+"Roberts, Ben",12L,2024096,Economics,EX,EX,GD,C,C
+"Roberts, Ben",12L,2024096,Geography,EX,EX,EX,B,C
+"Taylor, Tom",12L,2024097,Spanish,GD,GD,GD,A,A
+"Taylor, Tom",12L,2024097,Religious Studies,GD,GD,BE,A,A
+"Taylor, Tom",12L,2024097,English Literature,GD,GD,GD,A,A
+"Taylor, Tom",12L,2024097,Politics,GD,GD,GD,B,A
+"Hall, Evie",12L,2024098,Geography,GD,GD,GD,C,C
+"Hall, Evie",12L,2024098,Art,GD,GD,GD,C,C
+"Hall, Evie",12L,2024098,BTEC Applied Science,GD,GD,GD,M,M
+"Campbell, Joel",12L,2024099,Chemistry,GD,GD,GD,B,A
+"Campbell, Joel",12L,2024099,Art,GD,GD,GD,A,A
+"Campbell, Joel",12L,2024099,Biology,GD,GD,GD,B,A
+"White, Ivy",12L,2024100,Biology,GD,BE,GD,D,C
+"White, Ivy",12L,2024100,Politics,GD,GD,GD,D,C
+"White, Ivy",12L,2024100,Criminology,GD,GD,GD,C,C
+"Baker, Olivia",12L,2024101,Art,GD,GD,GD,A,A
+"Baker, Olivia",12L,2024101,Photography,GD,GD,GD,B,A
+"Baker, Olivia",12L,2024101,Geography,GD,GD,BE,B,A
+"Baker, Amelia",12L,2024102,Religious Studies,EX,GD,GD,C,B
+"Baker, Amelia",12L,2024102,French,GD,GD,GD,B,B
+"Baker, Amelia",12L,2024102,Criminology,EX,EX,GD,A,B
+"Shah, Jess",12L,2024103,Computer Science,GD,GD,GD,A,A
+"Shah, Jess",12L,2024103,Spanish,GD,GD,GD,A,A
+"Shah, Jess",12L,2024103,BTEC Applied Science,GD,GD,GD,D,D
+"Carter, Layla",12P,2024104,Mathematics,BE,BE,BE,A,A*
+"Carter, Layla",12P,2024104,Biology,GD,BE,BE,A,A*
+"Carter, Layla",12P,2024104,Spanish,GD,BE,BE,A*,A*
+"James, Leo",12P,2024105,Geography,GD,GD,GD,B,A
+"James, Leo",12P,2024105,English Literature,EX,EX,EX,A*,A
+"James, Leo",12P,2024105,Business,EX,EX,EX,A,A
+"James, Leo",12P,2024105,Chemistry,GD,EX,GD,A*,A
+"Mason, Chloe",12P,2024106,Religious Studies,GD,GD,GD,B,B
+"Mason, Chloe",12P,2024106,Mathematics,GD,GD,GD,B,B
+"Mason, Chloe",12P,2024106,Physics,GD,GD,GD,B,B
+"Cooper, Mia",12P,2024107,English Literature,GD,GD,GD,A*,A*
+"Cooper, Mia",12P,2024107,Religious Studies,GD,GD,GD,A*,A*
+"Cooper, Mia",12P,2024107,Economics,GD,GD,GD,A*,A*
+"Davies, Leo",12P,2024108,Mathematics,EX,GD,GD,A,A
+"Davies, Leo",12P,2024108,Geography,GD,GD,EX,A*,A
+"Davies, Leo",12P,2024108,Biology,EX,EX,EX,A,A
+"White, Luca",12P,2024109,Psychology,EX,EX,EX,B,A
+"White, Luca",12P,2024109,Chemistry,EX,GD,GD,A,A
+"White, Luca",12P,2024109,Criminology,EX,GD,EX,A,A
+"White, Luca",12P,2024109,Business,EX,GD,GD,A*,A
+"Mitchell, Jack",12P,2024110,Art,EX,EX,EX,B,B
+"Mitchell, Jack",12P,2024110,Sociology,EX,GD,GD,A,B
+"Mitchell, Jack",12P,2024110,Mathematics,GD,GD,GD,A,B
+"Mensah, Isaac",12P,2024111,History,GD,GD,GD,B,B
+"Mensah, Isaac",12P,2024111,Mathematics,GD,GD,GD,B,B
+"Mensah, Isaac",12P,2024111,Art,EX,GD,GD,B,B
+"Watson, Leah",12P,2024112,Mathematics,BE,BE,BE,B,A
+"Watson, Leah",12P,2024112,Biology,BE,BE,BE,B,A
+"Watson, Leah",12P,2024112,Religious Studies,BE,BE,BE,B,A
+"Baker, Ben",12P,2024113,Sociology,EX,EX,EX,A*,A
+"Baker, Ben",12P,2024113,Psychology,GD,EX,EX,A*,A
+"Baker, Ben",12P,2024113,English Literature,GD,GD,GD,A,A
+"Mitchell, Arjun",12P,2024114,Geography,GD,GD,GD,A,A
+"Mitchell, Arjun",12P,2024114,Biology,GD,GD,GD,A,A
+"Mitchell, Arjun",12P,2024114,Business,GD,GD,GD,B,A
+"Reid, Freya",12P,2024115,Computer Science,GD,GD,GD,C,B
+"Reid, Freya",12P,2024115,Mathematics,GD,GD,GD,B,B
+"Reid, Freya",12P,2024115,Photography,GD,GD,GD,B,B
+"Ahmed, Evie",12P,2024116,English Literature,GD,GD,GD,A,B
+"Ahmed, Evie",12P,2024116,Geography,GD,GD,GD,B,B
+"Ahmed, Evie",12P,2024116,Business,EX,GD,GD,B,B
+"Mensah, Kian",12P,2024117,Computer Science,GD,GD,GD,A*,A*
+"Mensah, Kian",12P,2024117,History,GD,GD,GD,A*,A*
+"Mensah, Kian",12P,2024117,Biology,EX,GD,GD,A*,A*
+"Hussain, Joel",12P,2024118,Art,GD,GD,GD,B,B
+"Hussain, Joel",12P,2024118,Business,EX,GD,GD,B,B
+"Hussain, Joel",12P,2024118,English Literature,GD,GD,GD,C,B
+"Edwards, Amelia",12P,2024119,Psychology,GD,GD,GD,A,A
+"Edwards, Amelia",12P,2024119,Criminology,GD,GD,GD,B,A
+"Edwards, Amelia",12P,2024119,English Literature,GD,GD,GD,A,A
+"Shah, Isaac",12P,2024120,Mathematics,EX,EX,EX,A*,A*
+"Shah, Isaac",12P,2024120,Business,EX,GD,GD,A*,A*
+"Shah, Isaac",12P,2024120,Psychology,EX,GD,EX,A*,A*
+"Price, Tom",12P,2024121,Mathematics,GD,GD,GD,A,A
+"Price, Tom",12P,2024121,Religious Studies,GD,GD,GD,A,A
+"Price, Tom",12P,2024121,Criminology,GD,GD,GD,B,A
+"Roberts, Chloe",12P,2024122,Business,GD,EX,GD,A,A
+"Roberts, Chloe",12P,2024122,Religious Studies,GD,GD,GD,A,A
+"Roberts, Chloe",12P,2024122,Politics,GD,GD,GD,A,A
+"Roberts, Chloe",12P,2024122,Photography,GD,GD,GD,A,A
+"Lewis, Isaac",12P,2024123,Business,EX,EX,EX,B,A
+"Lewis, Isaac",12P,2024123,Photography,EX,EX,EX,A,A
+"Lewis, Isaac",12P,2024123,Psychology,EX,EX,GD,A,A
+"Lewis, Isaac",12P,2024123,Politics,EX,EX,EX,A*,A
+"Foster, Priya",12P,2024124,English Literature,EX,GD,GD,C,C
+"Foster, Priya",12P,2024124,Sociology,EX,EX,GD,B,C
+"Foster, Priya",12P,2024124,Psychology,EX,GD,GD,B,C
+"White, Mia",12P,2024125,Sociology,GD,GD,GD,B,B
+"White, Mia",12P,2024125,Mathematics,GD,EX,GD,B,B
+"White, Mia",12P,2024125,Photography,GD,GD,BE,B,B
+"Marshall, Isaac",12P,2024126,Criminology,BE,BE,BE,C,B
+"Marshall, Isaac",12P,2024126,Economics,BE,BE,BE,C,B
+"Marshall, Isaac",12P,2024126,Biology,GD,BE,BE,C,B
+"Marshall, Isaac",12P,2024126,Business,BE,BE,BE,C,B
+"Marshall, Sienna",12P,2024127,Economics,GD,GD,GD,A,A
+"Marshall, Sienna",12P,2024127,Business,GD,GD,GD,A*,A
+"Marshall, Sienna",12P,2024127,Religious Studies,GD,GD,GD,A,A
+"Lewis, Evie",12P,2024128,Politics,EX,GD,GD,A,B
+"Lewis, Evie",12P,2024128,Criminology,GD,GD,GD,B,B
+"Lewis, Evie",12P,2024128,Spanish,GD,GD,GD,B,B
+"King, Harry",12R,2024129,Spanish,EX,EX,EX,A,A
+"King, Harry",12R,2024129,Physics,EX,EX,EX,A,A
+"King, Harry",12R,2024129,BTEC Applied Science,EX,EX,EX,D,D
+"Walker, Max",12R,2024130,History,EX,GD,GD,A,A*
+"Walker, Max",12R,2024130,Biology,GD,GD,EX,A*,A*
+"Walker, Max",12R,2024130,Mathematics,GD,GD,GD,A,A*
+"Walker, Max",12R,2024130,French,GD,EX,GD,A*,A*
+"Hall, Sophia",12R,2024131,Biology,GD,GD,GD,A*,A*
+"Hall, Sophia",12R,2024131,Photography,GD,GD,BE,A,A*
+"Hall, Sophia",12R,2024131,Religious Studies,BE,BE,BE,A*,A*
+"Graham, Priya",12R,2024132,Criminology,EX,EX,EX,A*,A*
+"Graham, Priya",12R,2024132,Photography,EX,GD,GD,A*,A*
+"Graham, Priya",12R,2024132,History,EX,EX,EX,A*,A*
+"Dhillon, Mia",12R,2024133,French,GD,GD,GD,A*,A
+"Dhillon, Mia",12R,2024133,Politics,GD,EX,GD,A,A
+"Dhillon, Mia",12R,2024133,Business,EX,EX,EX,A*,A
+"Dhillon, Mia",12R,2024133,Art,GD,GD,GD,B,A
+"Wood, Olivia",12R,2024134,Geography,EX,GD,GD,B,B
+"Wood, Olivia",12R,2024134,Criminology,EX,GD,GD,B,B
+"Wood, Olivia",12R,2024134,Economics,GD,GD,GD,B,B
+"Wood, Olivia",12R,2024134,Chemistry,GD,GD,GD,B,B
+"Shah, Grace",12R,2024135,Religious Studies,GD,GD,GD,B,A
+"Shah, Grace",12R,2024135,Mathematics,GD,GD,GD,A,A
+"Shah, Grace",12R,2024135,Photography,GD,GD,GD,B,A
+"Shah, Grace",12R,2024135,Computer Science,GD,BE,GD,B,A
+"Collins, Ava",12R,2024136,Psychology,GD,GD,GD,C,B
+"Collins, Ava",12R,2024136,Computer Science,GD,GD,GD,B,B
+"Collins, Ava",12R,2024136,Religious Studies,EX,GD,GD,B,B
+"Harris, Maya",12R,2024137,Business,GD,GD,GD,A,A
+"Harris, Maya",12R,2024137,Physics,GD,GD,GD,A,A
+"Harris, Maya",12R,2024137,English Literature,GD,GD,GD,A,A
+"Mensah, Nadia",12R,2024138,Art,EX,EX,EX,B,B
+"Mensah, Nadia",12R,2024138,English Literature,EX,GD,EX,A,B
+"Mensah, Nadia",12R,2024138,History,GD,EX,EX,B,B
+"Kaur, Erin",12R,2024139,Physics,GD,GD,GD,A,A
+"Kaur, Erin",12R,2024139,Criminology,GD,GD,GD,A,A
+"Kaur, Erin",12R,2024139,Business,GD,GD,GD,A,A
+"Kaur, Erin",12R,2024139,Chemistry,GD,GD,GD,B,A
+"Taylor, Megan",12R,2024140,Psychology,GD,GD,GD,A,A
+"Taylor, Megan",12R,2024140,Chemistry,GD,GD,GD,A*,A
+"Taylor, Megan",12R,2024140,French,GD,GD,GD,A,A
+"Taylor, Megan",12R,2024140,BTEC Applied Science,GD,GD,GD,D,D
+"Khan, Hannah",12R,2024141,Chemistry,EX,EX,EX,B,B
+"Khan, Hannah",12R,2024141,French,EX,EX,EX,A,B
+"Khan, Hannah",12R,2024141,Economics,EX,EX,EX,B,B
+"Khan, Hannah",12R,2024141,Business,EX,EX,EX,B,B
+"Collins, Evie",12R,2024142,Religious Studies,GD,GD,GD,A,A
+"Collins, Evie",12R,2024142,Photography,BE,BE,BE,B,A
+"Collins, Evie",12R,2024142,Physics,BE,BE,BE,B,A
+"Davies, Rohan",12R,2024143,Business,EX,EX,EX,B,B
+"Davies, Rohan",12R,2024143,Sociology,EX,EX,EX,B,B
+"Davies, Rohan",12R,2024143,Politics,EX,EX,EX,A,B
+"Murphy, Sophia",12R,2024144,Business,GD,GD,GD,B,B
+"Murphy, Sophia",12R,2024144,Art,GD,GD,GD,B,B
+"Murphy, Sophia",12R,2024144,Photography,GD,GD,GD,A,B
+"Brooks, Kian",12R,2024145,French,EX,GD,EX,A,B
+"Brooks, Kian",12R,2024145,Psychology,EX,GD,EX,B,B
+"Brooks, Kian",12R,2024145,Economics,EX,GD,GD,B,B
+"Patel, Ben",12R,2024146,Geography,EX,EX,EX,C,B
+"Patel, Ben",12R,2024146,French,GD,GD,GD,C,B
+"Patel, Ben",12R,2024146,Art,EX,EX,EX,B,B
+"Patel, Ben",12R,2024146,English Literature,EX,EX,EX,B,B
+"King, Sophia",12R,2024147,French,GD,GD,GD,B,A
+"King, Sophia",12R,2024147,Biology,GD,EX,GD,A,A
+"King, Sophia",12R,2024147,English Literature,GD,GD,GD,A*,A
+"King, Sophia",12R,2024147,Criminology,GD,GD,GD,A*,A
+"Khan, Isaac",12R,2024148,Mathematics,GD,GD,GD,A*,A*
+"Khan, Isaac",12R,2024148,Psychology,EX,EX,EX,A*,A*
+"Khan, Isaac",12R,2024148,Politics,GD,GD,GD,A,A*
+"Kelly, Jess",12R,2024149,Economics,EX,EX,EX,A,A*
+"Kelly, Jess",12R,2024149,Art,EX,EX,EX,A*,A*
+"Kelly, Jess",12R,2024149,Physics,EX,EX,EX,A*,A*
+"Jackson, Adam",12R,2024150,Mathematics,EX,EX,GD,B,B
+"Jackson, Adam",12R,2024150,Chemistry,GD,EX,GD,C,B
+"Jackson, Adam",12R,2024150,Sociology,GD,GD,GD,C,B
+"Mensah, Ava",12R,2024151,History,EX,EX,EX,A,B
+"Mensah, Ava",12R,2024151,Physics,EX,EX,GD,A,B
+"Mensah, Ava",12R,2024151,Religious Studies,EX,EX,GD,B,B
+"Cooper, Rohan",12R,2024152,Business,GD,GD,GD,A*,A*
+"Cooper, Rohan",12R,2024152,English Literature,GD,GD,GD,A*,A*
+"Cooper, Rohan",12R,2024152,Physics,GD,EX,GD,A*,A*
+"Kelly, Ruby",12R,2024153,Spanish,GD,GD,GD,A,A
+"Kelly, Ruby",12R,2024153,History,EX,GD,GD,A,A
+"Kelly, Ruby",12R,2024153,Criminology,GD,GD,GD,A,A
+"Lewis, Amelia",12W,2024154,Criminology,GD,GD,BE,C,B
+"Lewis, Amelia",12W,2024154,Religious Studies,GD,GD,BE,B,B
+"Lewis, Amelia",12W,2024154,Photography,BE,GD,BE,B,B
+"Brooks, Leo",12W,2024155,Geography,EX,EX,EX,A*,A
+"Brooks, Leo",12W,2024155,Religious Studies,EX,EX,EX,A,A
+"Brooks, Leo",12W,2024155,Psychology,EX,EX,EX,A,A
+"Mason, Ethan",12W,2024156,Mathematics,GD,GD,GD,B,B
+"Mason, Ethan",12W,2024156,Sociology,GD,GD,GD,C,B
+"Mason, Ethan",12W,2024156,Chemistry,GD,GD,BE,B,B
+"Mason, Ethan",12W,2024156,Economics,BE,GD,BE,B,B
+"King, Isaac",12W,2024157,Chemistry,GD,GD,GD,B,C
+"King, Isaac",12W,2024157,Economics,GD,GD,GD,C,C
+"King, Isaac",12W,2024157,Psychology,GD,GD,GD,C,C
+"Ward, Arjun",12W,2024158,French,GD,GD,GD,B,B
+"Ward, Arjun",12W,2024158,Photography,GD,GD,GD,C,B
+"Ward, Arjun",12W,2024158,Business,GD,GD,GD,B,B
+"Foster, Jack",12W,2024159,Chemistry,GD,GD,GD,D,C
+"Foster, Jack",12W,2024159,Further Mathematics,GD,GD,GD,B,C
+"Foster, Jack",12W,2024159,English Literature,GD,GD,GD,B,C
+"Foster, Jack",12W,2024159,Mathematics,GD,GD,GD,D,C
+"Dhillon, Ben",12W,2024160,Physics,EX,GD,GD,A,A
+"Dhillon, Ben",12W,2024160,Art,GD,GD,GD,A,A
+"Dhillon, Ben",12W,2024160,Politics,GD,GD,GD,B,A
+"Bennett, Nadia",12W,2024161,Spanish,BE,BE,BE,B,A
+"Bennett, Nadia",12W,2024161,Computer Science,BE,GD,BE,A,A
+"Bennett, Nadia",12W,2024161,Mathematics,BE,BE,BE,B,A
+"Bennett, Nadia",12W,2024161,Religious Studies,BE,GD,BE,B,A
+"Campbell, Ben",12W,2024162,Spanish,GD,EX,GD,A,A
+"Campbell, Ben",12W,2024162,Mathematics,EX,EX,EX,A,A
+"Campbell, Ben",12W,2024162,Business,EX,EX,EX,A*,A
+"Campbell, Ben",12W,2024162,BTEC Applied Science,EX,GD,GD,D*,D
+"Marshall, Erin",12W,2024163,Photography,GD,GD,GD,A,A
+"Marshall, Erin",12W,2024163,Religious Studies,GD,GD,GD,A,A
+"Marshall, Erin",12W,2024163,Sociology,GD,GD,GD,A,A
+"Singh, Noah",12W,2024164,Religious Studies,EX,EX,EX,B,A
+"Singh, Noah",12W,2024164,Art,GD,GD,GD,A,A
+"Singh, Noah",12W,2024164,French,EX,EX,EX,A,A
+"Owen, Layla",12W,2024165,History,EX,GD,GD,B,B
+"Owen, Layla",12W,2024165,Mathematics,EX,GD,EX,B,B
+"Owen, Layla",12W,2024165,Chemistry,GD,GD,GD,B,B
+"Wright, Mia",12W,2024166,Geography,EX,EX,EX,B,B
+"Wright, Mia",12W,2024166,Economics,EX,EX,EX,B,B
+"Wright, Mia",12W,2024166,Physics,EX,EX,EX,A,B
+"Davies, Evie",12W,2024167,French,EX,GD,GD,A,A
+"Davies, Evie",12W,2024167,Computer Science,EX,GD,EX,A,A
+"Davies, Evie",12W,2024167,Physics,EX,EX,EX,A*,A
+"Phillips, Jess",12W,2024168,Art,EX,EX,EX,B,B
+"Phillips, Jess",12W,2024168,English Literature,EX,EX,GD,A,B
+"Phillips, Jess",12W,2024168,Religious Studies,EX,EX,EX,B,B
+"Phillips, Jess",12W,2024168,Geography,EX,GD,EX,B,B
+"Graham, Imogen",12W,2024169,Mathematics,BE,BE,GD,A,A*
+"Graham, Imogen",12W,2024169,Photography,GD,GD,GD,A,A*
+"Graham, Imogen",12W,2024169,History,BE,GD,BE,A,A*
+"Graham, Samuel",12W,2024170,Mathematics,GD,BE,BE,A,A
+"Graham, Samuel",12W,2024170,Art,BE,GD,BE,B,A
+"Graham, Samuel",12W,2024170,Psychology,BE,BE,BE,B,A
+"Phillips, Zara",12W,2024171,Business,GD,EX,EX,A*,A*
+"Phillips, Zara",12W,2024171,Economics,EX,EX,GD,A*,A*
+"Phillips, Zara",12W,2024171,Spanish,EX,GD,EX,A*,A*
+"Walker, Evie",12W,2024172,Computer Science,GD,GD,GD,A,A
+"Walker, Evie",12W,2024172,Sociology,GD,GD,GD,A,A
+"Walker, Evie",12W,2024172,Chemistry,GD,GD,GD,A*,A
+"Marshall, Megan",12W,2024173,History,EX,EX,EX,B,B
+"Marshall, Megan",12W,2024173,Art,GD,GD,EX,A,B
+"Marshall, Megan",12W,2024173,Biology,GD,GD,GD,A,B
+"Morgan, Luca",12W,2024174,Politics,EX,EX,GD,B,B
+"Morgan, Luca",12W,2024174,Sociology,EX,EX,EX,B,B
+"Morgan, Luca",12W,2024174,Religious Studies,EX,EX,EX,B,B
+"Green, Finn",12W,2024175,Religious Studies,EX,EX,EX,A,A
+"Green, Finn",12W,2024175,Politics,EX,EX,EX,A*,A
+"Green, Finn",12W,2024175,Mathematics,GD,EX,EX,A,A
+"Scott, Jack",12W,2024176,Photography,EX,EX,EX,A,A
+"Scott, Jack",12W,2024176,English Literature,EX,EX,EX,A,A
+"Scott, Jack",12W,2024176,Politics,EX,EX,EX,A,A
+"Scott, Jack",12W,2024176,Biology,EX,EX,GD,A,A
