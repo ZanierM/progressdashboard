@@ -18,17 +18,24 @@ Turns each data drop's MIS marksheet export into a dashboard for the Year 12 tea
 | **Students of concern** | Everyone who meets a concern rule, with the reasons. Filter by tutor group, then print, copy for email or download as CSV for sixth form meetings. |
 | **Tutor groups** | One page per form, showing every student's subjects, indicators and grade against target. Print one form, or all seven with a page break between each, for tutors. |
 | **Subjects** | Every subject side by side, then a student list for each one, to print for Heads of Department. |
+| **Attendance** | Each tutor group's average, then everyone below 90% (or below 95%, or down 3+ points since the last upload), lowest first, with a trend line. Print or download as CSV. |
 | **Student profile** | One student across all subjects, with their history over every data drop. Useful for parent meetings. |
 
-**Concern rules** (change them in Settings): 2+ BE grades; 2+ subjects 1 grade or more below target; any subject 2+ grades below target; 3+ indicator grades down since the last drop; working grade down in 2+ subjects.
+**Concern rules** (change them in Settings): 2+ BE grades; 2+ subjects 1 grade or more below target; any subject 2+ grades below target; 3+ indicator grades down since the last drop; working grade down in 2+ subjects; attendance below 90%, or down 3+ percentage points since the previous attendance upload.
 
 The dashboard uses the school purple: dark purple for EX, light purple for GD and orange for BE. It is not a RAG rating.
+
+## Attendance (any time)
+
+Click **+ Add data**, choose **Attendance** and pick a CSV or Excel file with three columns: **student name**, **tutor group** and **attendance %**. Names can be written "Forename Surname" or "Surname, Forename". Percentages can be `93.4`, `93.4%` or `0.934`. Give the upload a name (e.g. "Attendance to 17 Oct") and save the workbook.
+
+Attendance is linked to the grades data by name and tutor group. Anyone who doesn't match (usually a preferred name or a form change) is listed at the bottom of the Attendance page. The latest upload is always the one shown, and the one before it is used for changes. You can upload attendance on its own, before any grades data.
 
 ## Each data drop (about 2 minutes)
 
 1. Export the marksheet from the MIS as CSV or Excel. It needs student names (or surname and forename), tutor group, and the indicator and grade columns. An admission number or UPN is optional, but it helps link students across drops.
 2. Open the dashboard, then **Open workbook** (your saved file).
-3. Click **+ Add data drop** and choose the export. The dashboard matches the columns automatically. Check the subject names and measures, name the drop (e.g. "Assessment Report 1") and click **Add**.
+3. Click **+ Add data**, choose **Grades data drop** and pick the export. The dashboard matches the columns automatically. Check the subject names and measures, name the drop (e.g. "Assessment Report 1") and click **Add**.
 4. Click **Save workbook** and replace the old file on OneDrive.
 
 Both layouts of export work:
@@ -37,7 +44,7 @@ Both layouts of export work:
 
 A level grades (A* to U, with + or −), BTEC grades (D*, D, M, P) and numbers are all understood. Keep subject names the same between drops so that trends line up. The check step warns you if a subject name is new.
 
-To see how it works first, click **Try the sample data** (174 made-up students). The `samples` folder shows both layouts.
+To see how it works first, click **Try the sample data** (made-up students, with two data drops and two attendance uploads). The `samples` folder shows both layouts.
 
 ## Setup
 

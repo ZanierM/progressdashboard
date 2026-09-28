@@ -68,6 +68,10 @@ table.t td.n,table.t th.n{text-align:right;font-variant-numeric:tabular-nums}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .reason{display:inline-block;background:var(--be-soft);border:1px solid #f3c79e;color:#7a3a07;border-radius:4px;padding:1px 6px;font-size:12px;margin:1px 3px 1px 0}
 .reason.dec{background:#fff4e0;border-color:#f0d49c;color:#6b4a05}
+.reason.att{background:#eef0f3;border-color:#c7ccd4;color:#2e323b}
+.att{font-weight:700;font-variant-numeric:tabular-nums}
+.att.attlow{color:#fff;background:var(--be);border-radius:4px;padding:1px 5px}
+.att.attmid{color:#9a4c0e}
 .good{display:inline-block;background:#f3e8f1;border:1px solid #dcc4d8;color:#5a2f54;border-radius:4px;padding:1px 6px;font-size:12px;margin:1px 3px 1px 0}
 .res{font-weight:700;font-size:12.5px}
 .res.pos{color:var(--up)} .res.neg{color:var(--down)} .res.z{color:var(--muted)}
@@ -148,7 +152,7 @@ table.t td.n,table.t th.n{text-align:right;font-variant-numeric:tabular-nums}
   <div class="sp"></div>
   <label for="dropSel">Data drop</label>
   <select id="dropSel"></select>
-  <button class="btn w" id="addBtn">+ Add data drop</button>
+  <button class="btn w" id="addBtn">+ Add data</button>
   <button class="btn" id="saveBtn" title="Download everything as one file to keep on OneDrive">Save workbook</button>
   <button class="btn" id="openBtn">Open workbook</button>
   <button class="btn" id="setBtn">Settings</button>
@@ -159,6 +163,7 @@ table.t td.n,table.t th.n{text-align:right;font-variant-numeric:tabular-nums}
   <button data-v="concerns">Students of concern <span class="badge" id="nConcern">0</span></button>
   <button data-v="tutor">Tutor groups</button>
   <button data-v="subjects">Subjects</button>
+  <button data-v="attendance" id="navAtt">Attendance</button>
   <button data-v="student">Student profile</button>
 </nav>
 <main id="view"></main>
@@ -178,6 +183,8 @@ const DEFAULT_SETTINGS = {
   farBelow: 2,     // flag any subject this many grades below target
   dropMin: 3,      // flag when this many indicator grades have fallen since the previous drop
   wagDropMin: 2,   // flag when the working-at grade has fallen in this many subjects
+  attMin: 90,      // flag attendance below this %
+  attDrop: 3,      // flag attendance that has fallen by this many percentage points since the previous upload
   remember: false, // keep data in this browser between visits
 };
 
@@ -234,7 +241,21 @@ let VIEW = 'overview';
 let DIRTY = false;
 let UI = { form: null, subject: null, student: null, sort: 'score', cForm: '' };
 
-function newWorkbook() { return { version: 1, settings: JSON.parse(JSON.stringify(DEFAULT_SETTINGS)), drops: [] }; }
+function newWorkbook() { return { version: 1, settings: JSON.parse(JSON.stringify(DEFAULT_SETTINGS)), drops: [], att: [] }; }
+// ---------- attendance ----------
+// Students are matched by name + tutor group, whatever order the name is written in
+function nkey(name, form) { return String(name || '').toLowerCase().replace(/[^a-z\s'-]/g, ' ').split(/[\s]+/).filter(Boolean).sort().join(' ') + '|' + String(form || '').toUpperCase(); }
+function parsePct(v) { const s = String(v ?? '').replace(/%/g, '').trim(); if (!s) return null; const n = parseFloat(s); return isNaN(n) ? null : n; }
+const attSnaps = () => (WB && WB.att) || [];
+function attMap(i) { const a = attSnaps()[i]; const m = new Map(); if (a) for (const r of a.records) m.set(r.nk, r.pct); return m; }
+function attInfo(nk) {
+  const n = attSnaps().length; if (!n) return null;
+  const now = attMap(n - 1).get(nk), before = n > 1 ? attMap(n - 2).get(nk) : undefined;
+  if (now == null) return null;
+  return { pct: now, prev: before ?? null, change: before != null ? Math.round((now - before) * 10) / 10 : null, hist: attSnaps().map((_, i) => attMap(i).get(nk) ?? null) };
+}
+const attCls = (p) => (p == null ? '' : p < WB.settings.attMin ? 'attlow' : p < 95 ? 'attmid' : '');
+const attTxt = (p) => (p == null ? '<span class="muted">–</span>' : `<span class="att ${attCls(p)}">${p.toFixed(1)}%</span>`);
 function remember() {
   try {
     if (WB?.settings.remember) localStorage.setItem('y12-workbook', JSON.stringify(WB));
@@ -242,6 +263,7 @@ function remember() {
   } catch { toast('Could not save in this browser. Use Save workbook instead.'); }
 }
 function changed() { DIRTY = !WB.settings.remember; remember(); }
+function fixWorkbook(d) { d.settings = { ...DEFAULT_SETTINGS, ...d.settings }; d.drops ||= []; d.att ||= []; return d; }
 window.addEventListener('beforeunload', (e) => { if (DIRTY && WB?.drops.length) { e.preventDefault(); e.returnValue = ''; } });
 
 // =====================================================================
@@ -289,9 +311,13 @@ function analyse(di) {
     else if (far.length) reasons.push({ t: `${S.farBelow}+ grades below target`, d: far.map((s) => `${s.subj} ${s.wag} v ${s.tgt}`).join(', '), cls: '' });
     if (falls.length >= S.dropMin) reasons.push({ t: `${falls.length} indicators down`, d: falls.join(', '), cls: 'dec' });
     if (wagDrops.length >= S.wagDropMin) reasons.push({ t: `Working grade down in ${wagDrops.length} subjects`, d: wagDrops.join(', '), cls: 'dec' });
+    st.nk = nkey(st.name, st.form);
+    st.att = attInfo(st.nk);
+    if (st.att && st.att.pct < S.attMin) reasons.push({ t: `Attendance ${st.att.pct.toFixed(1)}%`, d: `Below ${S.attMin}% (${attSnaps().at(-1).name})`, cls: 'att' });
+    else if (st.att && st.att.change != null && st.att.change <= -S.attDrop) reasons.push({ t: `Attendance down ${Math.abs(st.att.change)} pts`, d: `${st.att.prev.toFixed(1)}% → ${st.att.pct.toFixed(1)}%`, cls: 'att' });
     st.bes = bes.length; st.below = below.length; st.falls = falls.length;
     st.reasons = reasons;
-    st.score = bes.length * 2 + below.length * 2 + far.length * 2 + falls.length + wagDrops.length;
+    st.score = bes.length * 2 + below.length * 2 + far.length * 2 + falls.length + wagDrops.length + (st.att && st.att.pct < S.attMin ? 4 + Math.round((S.attMin - st.att.pct) / 2) : 0) + (st.att && st.att.change != null && st.att.change <= -S.attDrop ? 2 : 0);
     st.indAvg = avg(st.subs.map((s) => s.indAvg));
     st.prevAvg = avg(st.subs.map((s) => s.prevAvg));
     st.change = st.indAvg != null && st.prevAvg != null ? st.indAvg - st.prevAvg : null;
@@ -327,23 +353,25 @@ function delta(now, before, unit = '%', invert = false) {
   return `<span class="${good ? 'up' : 'down'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}${unit}</span> <span class="muted">since ${esc(WB.drops[CUR - 1].name)}</span>`;
 }
 const tutor = (f) => WB.settings.forms[f] || '';
-const printHead = (title) => `<div class="printhead"><h1>${esc(title)}</h1><div>${esc(WB.drops[CUR].name)} · printed ${new Date().toLocaleDateString('en-GB')}</div></div>`;
+const printHead = (title, sub) => `<div class="printhead"><h1>${esc(title)}</h1><div>${esc(sub ?? (WB.drops[CUR]?.name || ''))} · printed ${new Date().toLocaleDateString('en-GB')}</div></div>`;
 
 // =====================================================================
 //  Views
 // =====================================================================
 function render() {
-  const has = WB && WB.drops.length;
-  $('#nav').classList.toggle('hidden', !has);
-  $('#saveBtn').classList.toggle('hidden', !has);
-  $('#dropSel').classList.toggle('hidden', !has); $('label[for=dropSel]').classList.toggle('hidden', !has);
-  if (!has) return renderWelcome();
+  const hasDrops = !!(WB && WB.drops.length), hasAtt = !!attSnaps().length;
+  $('#nav').classList.toggle('hidden', !hasDrops && !hasAtt);
+  $('#saveBtn').classList.toggle('hidden', !hasDrops && !hasAtt);
+  $('#dropSel').classList.toggle('hidden', !hasDrops); $('label[for=dropSel]').classList.toggle('hidden', !hasDrops);
+  $$('#nav button').forEach((b) => b.classList.toggle('hidden', !hasDrops && b.dataset.v !== 'attendance'));
+  if (!hasDrops && !hasAtt) return renderWelcome();
+  if (!hasDrops) { VIEW = 'attendance'; $$('#nav button').forEach((b) => b.classList.toggle('on', b.dataset.v === VIEW)); return vAttendance(null); }
   if (CUR == null || CUR >= WB.drops.length) CUR = WB.drops.length - 1;
   $('#dropSel').innerHTML = WB.drops.map((d, i) => `<option value="${i}" ${i === CUR ? 'selected' : ''}>${esc(d.name)}</option>`).join('');
   const A = analyse(CUR);
   $('#nConcern').textContent = A.list.filter((s) => s.reasons.length).length;
   $$('#nav button').forEach((b) => b.classList.toggle('on', b.dataset.v === VIEW));
-  ({ overview: vOverview, concerns: vConcerns, tutor: vTutor, subjects: vSubjects, student: vStudent })[VIEW](A);
+  ({ overview: vOverview, concerns: vConcerns, tutor: vTutor, subjects: vSubjects, student: vStudent, attendance: vAttendance })[VIEW](A);
 }
 function renderWelcome() {
   $('#view').innerHTML = `<div class="empty">
@@ -351,9 +379,9 @@ function renderWelcome() {
     <p>Load a marksheet export from the MIS after each data drop. The dashboard shows how the year group is doing, who needs a conversation, and how each tutor group and subject compares.</p>
     <p><b>Your data stays on this computer.</b> Files are read by this page in your browser and are not uploaded anywhere.</p>
     <div class="choices">
-      <div class="choice" id="wAdd"><h3>Add a data drop</h3><p>Choose a CSV or Excel export (SIMS, Arbor or Bromcom). You'll match the columns once.</p></div>
+      <div class="choice" id="wAdd"><h3>Add data</h3><p>A grades export (SIMS, Arbor or Bromcom), or an attendance list with name, tutor group and attendance %.</p></div>
       <div class="choice" id="wOpen"><h3>Open a saved workbook</h3><p>Carry on from a workbook file you saved earlier, for example from OneDrive.</p></div>
-      <div class="choice" id="wSample"><h3>Try the sample data</h3><p>Two data drops for 174 made-up students, to see how it works.</p></div>
+      <div class="choice" id="wSample"><h3>Try the sample data</h3><p>Two data drops and two attendance uploads for made-up students, to see how it works.</p></div>
     </div></div>`;
   $('#wAdd').onclick = () => openImport();
   $('#wOpen').onclick = () => $('#openFile').click();
@@ -370,8 +398,20 @@ function vOverview(A) {
   const formRows = forms.map((f) => {
     const st = A.list.filter((s) => s.form === f), fc = counts(st.flatMap((s) => s.subs));
     const ch = avg(st.map((s) => s.change));
-    return { f, n: st.length, fc, flagged: st.filter((s) => s.reasons.length).length, ch };
+    const at = st.map((s) => s.att?.pct).filter((v) => v != null);
+    return { f, n: st.length, fc, flagged: st.filter((s) => s.reasons.length).length, ch, att: at.length ? avg(at) : null, attLow: st.filter((s) => s.att && s.att.pct < WB.settings.attMin).length };
   });
+  const hasAtt = attSnaps().length > 0;
+  const attAll = A.list.map((s) => s.att?.pct).filter((v) => v != null);
+  const attPrevAll = A.list.map((s) => s.att?.prev).filter((v) => v != null);
+  const attBelow = A.list.filter((s) => s.att && s.att.pct < WB.settings.attMin);
+  const attPanel = hasAtt ? `<div class="panel"><h2>Attendance <span class="muted" style="font-weight:400;font-size:13px">${esc(attSnaps().at(-1).name)}</span><span class="sp"></span><button class="btn noprint" data-go="attendance">See attendance</button></h2>
+      <div class="grid g4" style="gap:12px">
+        <div><div class="kpi" style="border:0;padding:0"><div class="v">${attAll.length ? (avg(attAll)).toFixed(1) + '%' : '–'}</div></div><div class="note">average${attPrevAll.length ? ` (${avg(attPrevAll).toFixed(1)}% at ${esc(attSnaps().at(-2).name)})` : ''}</div></div>
+        <div><div class="kpi" style="border:0;padding:0"><div class="v" style="color:var(--be)">${attBelow.length}</div></div><div class="note">below ${WB.settings.attMin}%</div></div>
+        <div><div class="kpi" style="border:0;padding:0"><div class="v">${attAll.filter((v) => v >= WB.settings.attMin && v < 95).length}</div></div><div class="note">between ${WB.settings.attMin}% and 95%</div></div>
+        <div><div class="kpi" style="border:0;padding:0"><div class="v">${attAll.filter((v) => v >= 95).length}</div></div><div class="note">95% or above</div></div>
+      </div></div>` : '';
   const improved = A.prev ? A.list.filter((s) => s.change != null && s.change > 0).sort((a, b) => b.change - a.change).slice(0, 10) : [];
   const allEx = A.list.filter((s) => s.allEx);
   const indRows = IND.map((k) => {
@@ -390,13 +430,14 @@ function vOverview(A) {
       <div class="panel"><h2>Indicators <span class="sp"></span><span class="legend"><span><i style="background:var(--ex)"></i>EX</span><span><i style="background:var(--gd)"></i>GD</span><span><i style="background:var(--be)"></i>BE</span></span></h2>
         <div class="scrollx"><table class="t"><tr><th></th><th>${esc(A.drop.name)}</th><th class="n">EX</th><th class="n">BE</th><th>${P ? esc(P.drop.name) : ''}</th></tr>${indRows}</table></div></div>
       <div class="panel"><h2>Students of concern <span class="sp"></span><button class="btn noprint" data-go="concerns">See list</button></h2>
-        <div style="display:flex;gap:18px;align-items:baseline"><div class="kpi" style="border:0;padding:0"><div class="v" style="color:var(--be)">${flagged.length}</div></div><div class="note">students meet at least one concern rule${pFlag != null ? ` (${pFlag} at ${esc(P.drop.name)})` : ''}.<br>Rules: ${WB.settings.beMin}+ BE grades, ${WB.settings.belowMin}+ subjects below target, any subject ${WB.settings.farBelow}+ grades below, ${WB.settings.dropMin}+ indicators down since the last drop, or working grades down in ${WB.settings.wagDropMin}+ subjects.</div></div>
+        <div style="display:flex;gap:18px;align-items:baseline"><div class="kpi" style="border:0;padding:0"><div class="v" style="color:var(--be)">${flagged.length}</div></div><div class="note">students meet at least one concern rule${pFlag != null ? ` (${pFlag} at ${esc(P.drop.name)})` : ''}.<br>Rules: ${WB.settings.beMin}+ BE grades, ${WB.settings.belowMin}+ subjects below target, any subject ${WB.settings.farBelow}+ grades below, ${WB.settings.dropMin}+ indicators down since the last drop, working grades down in ${WB.settings.wagDropMin}+ subjects${attSnaps().length ? `, attendance below ${WB.settings.attMin}% or down ${WB.settings.attDrop}+ points` : ''}.</div></div>
         <div style="margin-top:10px">${flagged.sort((a, b) => b.score - a.score).slice(0, 6).map((s) => `<div style="padding:5px 0;border-bottom:1px solid var(--line);cursor:pointer" data-sid="${esc(s.sid)}"><b>${esc(s.name)}</b> <span class="muted">${esc(s.form)}</span> ${s.reasons.map((r) => `<span class="reason ${r.cls}">${esc(r.t)}</span>`).join('')}</div>`).join('')}</div>
       </div>
     </div>
+    ${attPanel}
     <div class="panel"><h2>Tutor groups</h2><div class="scrollx"><table class="t">
-      <tr><th>Form</th><th>Tutor</th><th class="n">Students</th><th>Indicators</th><th class="n">EX</th><th class="n">BE</th><th class="n">On/above target</th><th class="n">Of concern</th>${A.prev ? '<th class="n">Change</th>' : ''}</tr>
-      ${formRows.map((r) => `<tr class="click" data-form="${esc(r.f)}"><td><b>${esc(r.f)}</b></td><td>${esc(tutor(r.f))}</td><td class="n">${r.n}</td><td style="width:26%">${stackBar(r.fc)}</td><td class="n">${pc(r.fc.EX, r.fc.n)}%</td><td class="n">${pc(r.fc.BE, r.fc.n)}%</td><td class="n">${r.fc.withT ? pc(r.fc.on, r.fc.withT) + '%' : '–'}</td><td class="n">${r.flagged}</td>${A.prev ? `<td class="n">${r.ch == null ? '–' : resTxt(Math.round(r.ch * 100) / 100)}</td>` : ''}</tr>`).join('')}
+      <tr><th>Form</th><th>Tutor</th><th class="n">Students</th><th>Indicators</th><th class="n">EX</th><th class="n">BE</th><th class="n">On/above target</th><th class="n">Of concern</th>${A.prev ? '<th class="n">Change</th>' : ''}${hasAtt ? `<th class="n">Attendance</th><th class="n">Below ${WB.settings.attMin}%</th>` : ''}</tr>
+      ${formRows.map((r) => `<tr class="click" data-form="${esc(r.f)}"><td><b>${esc(r.f)}</b></td><td>${esc(tutor(r.f))}</td><td class="n">${r.n}</td><td style="width:26%">${stackBar(r.fc)}</td><td class="n">${pc(r.fc.EX, r.fc.n)}%</td><td class="n">${pc(r.fc.BE, r.fc.n)}%</td><td class="n">${r.fc.withT ? pc(r.fc.on, r.fc.withT) + '%' : '–'}</td><td class="n">${r.flagged}</td>${A.prev ? `<td class="n">${r.ch == null ? '–' : resTxt(Math.round(r.ch * 100) / 100)}</td>` : ''}${hasAtt ? `<td class="n">${attTxt(r.att)}</td><td class="n">${r.attLow}</td>` : ''}</tr>`).join('')}
     </table></div>${A.prev ? '<div class="note" style="margin-top:6px">Change is the average movement in indicator grades per subject since the previous drop (EX = 3, GD = 2, BE = 1).</div>' : ''}</div>
     <div class="grid g2">
       <div class="panel"><h2>All EX</h2>${allEx.length ? `<div class="note" style="margin-bottom:6px">EX for every indicator in every subject.</div>` + allEx.map((s) => `<span class="good" style="cursor:pointer" data-sid="${esc(s.sid)}">${esc(s.name)} (${esc(s.form)})</span>`).join('') : '<div class="note">Nobody this time.</div>'}</div>
@@ -419,8 +460,8 @@ function vConcerns(A) {
       <button class="btn" id="cCopy">Copy for email</button><button class="btn" id="cCsv">Download CSV</button><button class="btn g" onclick="window.print()">Print</button>
     </div>
     <div class="panel"><div class="scrollx"><table class="t">
-      <tr><th>Student</th><th>Form</th><th>Tutor</th><th>Why</th><th>Detail</th></tr>
-      ${list.map((s) => `<tr class="click" data-sid="${esc(s.sid)}"><td><b>${esc(s.name)}</b></td><td>${esc(s.form)}</td><td>${esc(tutor(s.form))}</td><td>${s.reasons.map((r) => `<span class="reason ${r.cls}">${esc(r.t)}</span>`).join('<br>')}</td><td class="note">${s.reasons.map((r) => esc(r.d)).join('<br>')}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">No students meet the concern rules.</td></tr>'}
+      <tr><th>Student</th><th>Form</th><th>Tutor</th>${attSnaps().length ? '<th class="n">Attendance</th>' : ''}<th>Why</th><th>Detail</th></tr>
+      ${list.map((s) => `<tr class="click" data-sid="${esc(s.sid)}"><td><b>${esc(s.name)}</b></td><td>${esc(s.form)}</td>${attSnaps().length ? `<td class="n">${attTxt(s.att?.pct)}</td>` : ''}<td>${esc(tutor(s.form))}</td><td>${s.reasons.map((r) => `<span class="reason ${r.cls}">${esc(r.t)}</span>`).join('<br>')}</td><td class="note">${s.reasons.map((r) => esc(r.d)).join('<br>')}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">No students meet the concern rules.</td></tr>'}
     </table></div></div>`;
   $('#cForm').onchange = (e) => { UI.cForm = e.target.value; render(); };
   $('#cSort').onchange = (e) => { UI.sort = e.target.value; render(); };
@@ -428,7 +469,7 @@ function vConcerns(A) {
     const txt = `Students of concern – ${A.drop.name}${UI.cForm ? ' – ' + UI.cForm : ''}\n\n` + list.map((s) => `${s.name} (${s.form})\n  ${s.reasons.map((r) => r.t + ': ' + r.d).join('\n  ')}`).join('\n\n');
     try { await navigator.clipboard.writeText(txt); toast('Copied. Remember this contains student data.'); } catch { toast('Could not copy'); }
   };
-  $('#cCsv').onclick = () => downloadCsv(`concerns-${A.drop.name}.csv`, [['Student', 'Form', 'Tutor', 'Reasons', 'Detail'], ...list.map((s) => [s.name, s.form, tutor(s.form), s.reasons.map((r) => r.t).join('; '), s.reasons.map((r) => r.d).join('; ')])]);
+  $('#cCsv').onclick = () => downloadCsv(`concerns-${A.drop.name}.csv`, [['Student', 'Form', 'Tutor', 'Attendance %', 'Reasons', 'Detail'], ...list.map((s) => [s.name, s.form, tutor(s.form), s.att ? s.att.pct : '', s.reasons.map((r) => r.t).join('; '), s.reasons.map((r) => r.d).join('; ')])]);
   bindCommon();
 }
 
@@ -437,7 +478,7 @@ function tutorTable(A, f) {
   const st = A.list.filter((s) => s.form === f), fc = counts(st.flatMap((s) => s.subs));
   return `<div class="panel"><h2>${esc(f)} <span class="muted" style="font-weight:400;font-size:14px">${tutor(f) ? 'Tutor: ' + esc(tutor(f)) : ''} · ${st.length} students · ${esc(A.drop.name)}</span><span class="sp"></span><span style="width:220px">${stackBar(fc)}</span></h2>
     <div class="scrollx"><table class="t"><tr><th>Student</th><th>Subjects (ATL · RtF · QoW, working at / target)</th><th>Flags</th></tr>
-    ${st.map((s) => `<tr class="click" data-sid="${esc(s.sid)}"><td style="white-space:nowrap"><b>${esc(s.name)}</b>${s.change != null ? `<div class="note">Change ${resTxt(Math.round(s.change * 100) / 100)}</div>` : ''}</td>
+    ${st.map((s) => `<tr class="click" data-sid="${esc(s.sid)}"><td style="white-space:nowrap"><b>${esc(s.name)}</b>${s.att ? `<div class="note">Attendance ${attTxt(s.att.pct)}</div>` : ''}${s.change != null ? `<div class="note">Change ${resTxt(Math.round(s.change * 100) / 100)}</div>` : ''}</td>
       <td>${s.subs.map((u) => `<span class="subjcell ${u.ind.includes('BE') || (u.res != null && u.res <= -1) ? 'flag' : ''}"><b>${esc(u.subj)}</b>${u.ind.map(chip).join('')} <span style="font-size:12px;margin-left:4px">${esc(u.wag || '–')} / ${esc(u.tgt || '–')}</span> ${resTxt(u.res)}</span>`).join('')}</td>
       <td>${s.reasons.map((r) => `<span class="reason ${r.cls}">${esc(r.t)}</span>`).join('<br>') || (s.allEx ? '<span class="good">All EX</span>' : '')}</td></tr>`).join('')}
     </table></div></div>`;
@@ -508,6 +549,12 @@ function spark(vals, w = 90, h = 22) {
   const x = (i) => 4 + (i * (w - 8)) / Math.max(1, vals.length - 1), y = (v) => h - 3 - ((v - 1) / 2) * (h - 6);
   return `<svg class="spark" width="${w}" height="${h}" aria-hidden="true"><polyline fill="none" stroke="var(--green)" stroke-width="2" points="${pts.map(([v, i]) => `${x(i)},${y(v)}`).join(' ')}"/>${pts.map(([v, i]) => `<circle cx="${x(i)}" cy="${y(v)}" r="2.5" fill="var(--green)"/>`).join('')}</svg>`;
 }
+function sparkPct(vals, w = 110, h = 24) {
+  const pts = vals.map((v, i) => [v, i]).filter(([v]) => v != null);
+  if (pts.length < 2) return '';
+  const lo = Math.min(80, ...pts.map(([v]) => v)), x = (i) => 4 + (i * (w - 8)) / Math.max(1, vals.length - 1), y = (v) => h - 3 - ((v - lo) / (100 - lo || 1)) * (h - 6);
+  return `<svg class="spark" width="${w}" height="${h}" aria-hidden="true"><line x1="0" x2="${w}" y1="${y(WB.settings.attMin)}" y2="${y(WB.settings.attMin)}" stroke="var(--be)" stroke-dasharray="3 3" stroke-width="1"/><polyline fill="none" stroke="var(--slate)" stroke-width="2" points="${pts.map(([v, i]) => `${x(i)},${y(v)}`).join(' ')}"/>${pts.map(([v, i]) => `<circle cx="${x(i)}" cy="${y(v)}" r="2.5" fill="var(--slate)"/>`).join('')}</svg>`;
+}
 function vStudent(A) {
   const opts = A.list.map((s) => `<option value="${esc(s.name)} (${esc(s.form)})"></option>`).join('');
   const s = UI.student && A.students[UI.student];
@@ -517,6 +564,7 @@ function vStudent(A) {
     const hist = drops.map((d) => { const m = {}; for (const r of d.records) if (r.sid === s.sid) m[r.subj] = r; return m; });
     body = `${printHead(s.name + ' – progress summary')}
       <div class="panel"><h2>${esc(s.name)} <span class="muted" style="font-weight:400;font-size:14px">${esc(s.form)}${tutor(s.form) ? ' · Tutor ' + esc(tutor(s.form)) : ''} · ${esc(A.drop.name)}</span><span class="sp"></span><button class="btn g noprint" onclick="window.print()">Print</button></h2>
+        ${s.att ? `<div style="margin:0 0 8px">Attendance <span style="font-size:16px">${attTxt(s.att.pct)}</span> <span class="note">${esc(attSnaps().at(-1).name)}${s.att.change != null ? ` · ${s.att.change > 0 ? '+' : ''}${s.att.change} pts since ${esc(attSnaps().at(-2).name)}` : ''}</span>${attSnaps().length > 1 ? ' ' + sparkPct(s.att.hist) : ''}</div>` : attSnaps().length ? '<div class="note" style="margin-bottom:8px">No attendance figure matched for this student (check the name and tutor group match the attendance file).</div>' : ''}
         ${s.reasons.length ? s.reasons.map((r) => `<div style="margin:3px 0"><span class="reason ${r.cls}">${esc(r.t)}</span> <span class="note">${esc(r.d)}</span></div>`).join('') : s.allEx ? '<span class="good">EX in every indicator, every subject</span>' : '<span class="note">No concern rules met.</span>'}
       </div>
       <div class="panel"><h2>Subjects</h2><div class="scrollx"><table class="t">
@@ -536,6 +584,51 @@ function vStudent(A) {
     $('#stPrev').onclick = () => { UI.student = A.list[(i - 1 + A.list.length) % A.list.length].sid; render(); };
     $('#stNext').onclick = () => { UI.student = A.list[(i + 1) % A.list.length].sid; render(); };
   } else setTimeout(() => $('#stSearch').focus(), 0);
+  bindCommon();
+}
+
+// ---------- attendance ----------
+function vAttendance(A) {
+  const snaps = attSnaps(), S = WB.settings;
+  if (!snaps.length) {
+    $('#view').innerHTML = `<div class="panel empty"><h2>No attendance yet</h2><p>Click <b>+ Add data</b> and choose <b>Attendance</b>. The file only needs student name, tutor group and attendance %.</p></div>`;
+    return;
+  }
+  const latest = snaps.at(-1);
+  // Everyone in the latest attendance upload, linked to grade data where names match
+  const byNk = A ? Object.fromEntries(A.list.map((s) => [s.nk, s])) : {};
+  const prevM = snaps.length > 1 ? attMap(snaps.length - 2) : new Map();
+  let rows = latest.records.map((r) => {
+    const st = byNk[r.nk];
+    const prev = prevM.get(r.nk);
+    return { ...r, sid: st?.sid || null, change: prev != null ? Math.round((r.pct - prev) * 10) / 10 : null, hist: snaps.map((_, i) => attMap(i).get(r.nk) ?? null), flags: st ? st.reasons.filter((x) => x.cls !== 'att').length : 0 };
+  });
+  const forms = [...new Set(rows.map((r) => r.form))].sort();
+  const formRows = forms.map((f) => { const L = rows.filter((r) => r.form === f); return { f, n: L.length, avg: avg(L.map((r) => r.pct)), low: L.filter((r) => r.pct < S.attMin).length, mid: L.filter((r) => r.pct >= S.attMin && r.pct < 95).length }; });
+  const unmatched = A ? rows.filter((r) => !r.sid) : [];
+  UI.aForm ??= ''; UI.aShow ??= 'low';
+  let list = rows.filter((r) => (!UI.aForm || r.form === UI.aForm) && (UI.aShow === 'all' || (UI.aShow === 'low' ? r.pct < S.attMin : UI.aShow === '95' ? r.pct < 95 : r.change != null && r.change <= -S.attDrop)));
+  list.sort((a, b) => a.pct - b.pct);
+  $('#view').innerHTML = `${printHead('Attendance' + (UI.aForm ? ' – ' + UI.aForm : ''), latest.name)}
+    <div class="panel"><h2>Tutor groups <span class="muted" style="font-weight:400;font-size:13px">${esc(latest.name)}</span></h2><div class="scrollx"><table class="t">
+      <tr><th>Form</th><th>Tutor</th><th class="n">Students</th><th class="n">Average</th><th class="n">Below ${S.attMin}%</th><th class="n">${S.attMin}–95%</th><th style="width:35%"></th></tr>
+      ${formRows.map((r) => `<tr class="click" data-af="${esc(r.f)}"><td><b>${esc(r.f)}</b></td><td>${esc(tutor(r.f))}</td><td class="n">${r.n}</td><td class="n">${attTxt(r.avg)}</td><td class="n">${r.low}</td><td class="n">${r.mid}</td><td><div class="bar"><div style="width:${Math.max(0, Math.min(100, (r.avg - 80) * 5))}%;background:var(--slate)"></div></div></td></tr>`).join('')}
+    </table></div><div class="note" style="margin-top:6px">Bar runs from 80% to 100%. Click a tutor group to filter the list.</div></div>
+    <div class="toolbar">
+      <select id="aForm"><option value="">All tutor groups</option>${forms.map((f) => `<option ${f === UI.aForm ? 'selected' : ''}>${esc(f)}</option>`).join('')}</select>
+      <div class="pills"><button data-as="low" class="${UI.aShow === 'low' ? 'on' : ''}">Below ${S.attMin}%</button><button data-as="95" class="${UI.aShow === '95' ? 'on' : ''}">Below 95%</button>${snaps.length > 1 ? `<button data-as="drop" class="${UI.aShow === 'drop' ? 'on' : ''}">Down ${S.attDrop}+ pts</button>` : ''}<button data-as="all" class="${UI.aShow === 'all' ? 'on' : ''}">Everyone</button></div>
+      <span class="muted">${list.length} students</span><span style="flex:1"></span>
+      <button class="btn" id="aCsv">Download CSV</button><button class="btn g" onclick="window.print()">Print</button>
+    </div>
+    <div class="panel"><div class="scrollx"><table class="t">
+      <tr><th>Student</th><th>Form</th><th>Tutor</th><th class="n">Attendance</th>${snaps.length > 1 ? `<th class="n">Change</th><th>Trend</th>` : ''}${A ? '<th>Other concerns</th>' : ''}</tr>
+      ${list.map((r) => `<tr class="${r.sid ? 'click' : ''}" ${r.sid ? `data-sid="${esc(r.sid)}"` : ''}><td><b>${esc(r.name)}</b></td><td>${esc(r.form)}</td><td>${esc(tutor(r.form))}</td><td class="n">${attTxt(r.pct)}</td>${snaps.length > 1 ? `<td class="n">${r.change == null ? '–' : `<span class="${r.change < 0 ? 'down' : r.change > 0 ? 'up' : 'muted'}">${r.change > 0 ? '+' : ''}${r.change}</span>`}</td><td>${sparkPct(r.hist)}</td>` : ''}${A ? `<td>${r.sid ? (r.flags ? `<span class="reason">${r.flags} other</span>` : '') : '<span class="note">not matched to grades</span>'}</td>` : ''}</tr>`).join('') || '<tr><td colspan="7" class="muted">Nobody in this group.</td></tr>'}
+    </table></div></div>
+    ${unmatched.length ? `<div class="panel noprint"><h2>Names not matched to grade data (${unmatched.length})</h2><div class="note">These students are in the attendance file but their name and tutor group don't match anyone in the grades data. Usually it's a preferred name or a form change. Their attendance still shows above.</div><div style="margin-top:6px">${unmatched.slice(0, 60).map((r) => `<span class="reason att">${esc(r.name)} (${esc(r.form)})</span>`).join('')}</div></div>` : ''}`;
+  $('#aForm').onchange = (e) => { UI.aForm = e.target.value; render(); };
+  $$('[data-as]').forEach((b) => b.onclick = () => { UI.aShow = b.dataset.as; render(); });
+  $$('[data-af]').forEach((el) => el.onclick = () => { UI.aForm = el.dataset.af; render(); });
+  $('#aCsv').onclick = () => downloadCsv(`attendance-${latest.name}.csv`, [['Student', 'Form', 'Tutor', 'Attendance %', 'Change'], ...list.map((r) => [r.name, r.form, tutor(r.form), r.pct, r.change ?? ''])]);
   bindCommon();
 }
 
@@ -586,6 +679,28 @@ function closeModal() { $('#modal')?.remove(); }
 
 function openImport() {
   IMP = {};
+  modal(`<div class="mh"><h2>Add data</h2><button class="btn" data-close>Cancel</button></div>
+    <div class="mb"><p>What are you adding?</p>
+      <div class="choices" style="margin-top:6px">
+        <div class="choice" id="kGrades"><h3>Grades data drop</h3><p>Marksheet export with ATL, Response to Feedback, Quality of Work, working-at and target grades.</p></div>
+        <div class="choice" id="kAtt"><h3>Attendance</h3><p>A list with student name, tutor group and attendance %.</p></div>
+      </div>
+      <div class="note" style="margin-top:14px">Files are read by this page only. Nothing is uploaded anywhere.</div></div>`);
+  $('#kGrades').onclick = openGrades;
+  $('#kAtt').onclick = openAtt;
+}
+function openAtt() {
+  IMP = { kind: 'att' };
+  modal(`<div class="mh"><h2>Add attendance</h2><button class="btn" data-close>Cancel</button></div>
+    <div class="mb"><div class="steps"><span class="on">1 Choose file</span><span>2 Match columns</span><span>3 Check and add</span></div>
+      <p>Choose a <b>CSV or Excel</b> file with one row per student: <b>student name</b> (or surname and forename), <b>tutor group</b> and <b>attendance %</b>. Other columns are ignored.</p>
+      <input type="file" id="impFile" accept=".csv,.xlsx,.xls,.txt">
+      <div class="note" style="margin-top:10px">Students are matched to the grades data by name and tutor group.</div>
+    </div>`);
+  $('#impFile').onchange = (e) => e.target.files[0] && readFile(e.target.files[0]);
+}
+function openGrades() {
+  IMP = { kind: 'grades' };
   modal(`<div class="mh"><h2>Add a data drop</h2><button class="btn" data-close>Cancel</button></div>
     <div class="mb"><div class="steps"><span class="on">1 Choose file</span><span>2 Match columns</span><span>3 Check and add</span></div>
       <p>Export a marksheet from the MIS as <b>CSV or Excel</b>, with one row per student (subjects across the columns) or one row per student per subject. It needs student names, tutor group, and some of: ATL, Response to Feedback, Quality of Work, working-at grade and target grade.</p>
@@ -600,7 +715,7 @@ async function readFile(file) {
   try { wb = XLSX.read(buf, { type: 'array', raw: false, cellDates: true }); }
   catch (e) { return toast('Could not read that file'); }
   IMP.file = file.name; IMP.wb = wb; IMP.sheet = wb.SheetNames[0];
-  IMP.dropName = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+  IMP.dropName = IMP.kind === 'att' ? `Attendance ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}` : file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
   prepareSheet();
 }
 function prepareSheet() {
@@ -609,13 +724,19 @@ function prepareSheet() {
   let hi = 0;
   for (let i = 0; i < Math.min(rows.length, 15); i++) {
     const r = rows[i].map((c) => String(c).trim());
-    if (r.filter(Boolean).length >= 3 && r.some((c) => RX.name.test(c) || RX.surname.test(c) || RX.forename.test(c) || RX.form.test(c) || RX.id.test(c))) { hi = i; break; }
+    if (r.filter(Boolean).length >= (IMP.kind === 'att' ? 2 : 3) && r.some((c) => RX.name.test(c) || RX.surname.test(c) || RX.forename.test(c) || RX.form.test(c) || RX.id.test(c))) { hi = i; break; }
   }
   IMP.headers = rows[hi].map((h, i) => String(h).trim() || `Column ${i + 1}`);
   IMP.rows = rows.slice(hi + 1).filter((r) => r.some((c) => String(c).trim()));
   const H = IMP.headers;
   const find = (re) => H.findIndex((h) => re.test(h));
   IMP.map = { id: find(RX.id), name: find(RX.name), surname: find(RX.surname), forename: find(RX.forename), form: find(RX.form), subject: find(RX.subject) };
+  if (IMP.kind === 'att') {
+    IMP.map.subject = -1;
+    IMP.map.att = find(/attend|^att\b|att\s*%|%|percent/i);
+    if (IMP.map.att < 0) IMP.map.att = H.findIndex((h, i) => i !== IMP.map.form && IMP.rows.slice(0, 20).every((r) => r[i] === '' || r[i] == null || parsePct(r[i]) != null) && IMP.rows.some((r) => parsePct(r[i]) != null));
+    return stepMapAtt();
+  }
   IMP.long = IMP.map.subject >= 0;
   IMP.cols = H.map((h, i) => {
     if (Object.values(IMP.map).includes(i)) return null;
@@ -658,6 +779,76 @@ function stepMap() {
   $$('#modal [data-c]').forEach((el) => el.onchange = () => { const c = IMP.cols.find((x) => x.i === +el.dataset.c); c[el.dataset.f] = el.value.trim(); });
   $('#mName').oninput = (e) => IMP.dropName = e.target.value;
   $('#mGo').onclick = () => { const res = buildRecords(); if (res.error) { $('#mMsg').innerHTML = `<div class="warn">${res.error}</div>`; return; } stepCheck(res); };
+}
+function stepMapAtt() {
+  const m = IMP.map, sheets = IMP.wb.SheetNames;
+  modal(`<div class="mh"><h2>Match the columns</h2><button class="btn" data-close>Cancel</button></div>
+    <div class="mb"><div class="steps"><span>1 Choose file</span><span class="on">2 Match columns</span><span>3 Check and add</span></div>
+      ${sheets.length > 1 ? `<div class="field" style="max-width:300px;margin-bottom:10px">Sheet<select id="mSheet">${sheets.map((s) => `<option ${s === IMP.sheet ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select></div>` : ''}
+      <div class="preview"><table><tr>${IMP.headers.map((h) => `<th>${esc(h)}</th>`).join('')}</tr>${IMP.rows.slice(0, 4).map((r) => `<tr>${IMP.headers.map((_, i) => `<td>${esc(r[i] ?? '')}</td>`).join('')}</tr>`).join('')}</table></div>
+      <div class="grid g4" style="gap:10px;margin-top:14px">
+        <div class="field">Full name<select data-k="name">${colOptions(m.name)}</select></div>
+        <div class="field">or Surname<select data-k="surname">${colOptions(m.surname)}</select></div>
+        <div class="field">and Forename<select data-k="forename">${colOptions(m.forename)}</select></div>
+        <div class="field">Tutor group<select data-k="form">${colOptions(m.form)}</select></div>
+        <div class="field">Attendance %<select data-k="att">${colOptions(m.att)}</select></div>
+        <div class="field" style="grid-column:span 2">Name for this upload<input id="mName" value="${esc(IMP.dropName)}" placeholder="e.g. Attendance to 17 October"></div>
+      </div>
+      <div id="mMsg"></div>
+    </div>
+    <div class="mf"><button class="btn" data-close>Cancel</button><button class="btn g" id="mGo">Check and add</button></div>`);
+  $('#mSheet') && ($('#mSheet').onchange = (e) => { IMP.sheet = e.target.value; prepareSheet(); });
+  $$('#modal [data-k]').forEach((s) => s.onchange = () => { IMP.map[s.dataset.k] = +s.value; });
+  $('#mName').oninput = (e) => IMP.dropName = e.target.value;
+  $('#mGo').onclick = () => { const res = buildAtt(); if (res.error) { $('#mMsg').innerHTML = `<div class="warn">${res.error}</div>`; return; } stepCheckAtt(res); };
+}
+function studentName(get, m) {
+  if (m.surname >= 0 && m.forename >= 0) return [`${get(m.forename)} ${get(m.surname)}`.trim(), `${get(m.surname)} ${get(m.forename)}`];
+  const raw = get(m.name >= 0 ? m.name : m.surname);
+  if (raw.includes(',')) { const [sn, fn] = raw.split(',').map((x) => x.trim()); return [`${fn} ${sn}`.trim(), `${sn} ${fn}`]; }
+  const p = raw.split(' '); return [raw, p.length > 1 ? p.slice(-1)[0] + ' ' + p.slice(0, -1).join(' ') : raw];
+}
+function buildAtt() {
+  const m = IMP.map;
+  if (m.name < 0 && m.surname < 0) return { error: 'Choose the column with student names (or surname and forename).' };
+  if (m.form < 0) return { error: 'Choose the tutor group column.' };
+  if (m.att < 0) return { error: 'Choose the attendance column.' };
+  const recs = []; let skipped = 0;
+  for (const r of IMP.rows) {
+    const get = (i) => (i >= 0 ? String(r[i] ?? '').trim() : '');
+    const [name, sort] = studentName(get, m);
+    const pct = parsePct(get(m.att));
+    if (!name || pct == null) { skipped++; continue; }
+    const form = normForm(get(m.form));
+    recs.push({ nk: nkey(name, form), name, sort, form, pct });
+  }
+  if (!recs.length) return { error: 'No attendance figures were found with these settings.' };
+  // Figures given as fractions (0.93) rather than percentages
+  if (recs.every((r) => r.pct <= 1)) recs.forEach((r) => (r.pct = r.pct * 100));
+  recs.forEach((r) => (r.pct = Math.round(r.pct * 10) / 10));
+  return { records: recs, skipped };
+}
+function stepCheckAtt({ records, skipped }) {
+  const known = new Set((WB?.drops.at(-1)?.records || []).map((r) => nkey(r.name, r.form)));
+  const matched = known.size ? records.filter((r) => known.has(r.nk)).length : null;
+  const low = records.filter((r) => r.pct < (WB?.settings.attMin ?? DEFAULT_SETTINGS.attMin)).length;
+  const box = $('#modal .box');
+  box.innerHTML = `<div class="mh"><h2>Check and add</h2><button class="btn" data-close>Cancel</button></div>
+    <div class="mb"><div class="steps"><span>1 Choose file</span><span>2 Match columns</span><span class="on">3 Check and add</span></div>
+      <div class="ok"><b>${records.length}</b> students, average attendance <b>${avg(records.map((r) => r.pct)).toFixed(1)}%</b>, <b>${low}</b> below ${WB?.settings.attMin ?? DEFAULT_SETTINGS.attMin}%.</div>
+      ${matched != null ? `<div class="${matched < records.length ? 'warn' : 'ok'}"><b>${matched}</b> of ${records.length} matched to students in the grades data.${matched < records.length ? ' The others will still appear on the Attendance page, listed as not matched.' : ''}</div>` : ''}
+      ${skipped ? `<div class="warn">${skipped} rows had no name or no attendance figure and were skipped.</div>` : ''}
+      <div class="field" style="max-width:420px;margin-top:12px">Name for this upload<input id="cName" value="${esc(IMP.dropName)}"></div>
+    </div>
+    <div class="mf"><button class="btn" id="cBack">← Back</button><button class="btn g" id="cAdd">Add attendance</button></div>`;
+  $$('[data-close]', box).forEach((b) => b.onclick = closeModal);
+  $('#cBack').onclick = stepMapAtt;
+  $('#cAdd').onclick = () => {
+    if (!WB) WB = newWorkbook();
+    const name = $('#cName').value.trim() || `Attendance ${WB.att.length + 1}`;
+    WB.att.push({ id: Date.now() + Math.random(), name, added: new Date().toISOString(), records });
+    changed(); closeModal(); if (!WB.drops.length) VIEW = 'attendance'; render(); toast(`Added ${name}`);
+  };
 }
 function normForm(f) { const s = String(f ?? '').trim().toUpperCase(); const m = s.match(/\b(1[23])\s*([A-Z])\b/); return m ? m[1] + m[2] : s; }
 function buildRecords() {
@@ -741,6 +932,14 @@ async function loadSample() {
       const res = buildRecords(); if (res.error) throw new Error(res.error);
       WB.drops.push({ id: Math.random(), name, added: new Date().toISOString(), records: res.records });
     }
+    for (const [file, name] of [['samples/sample-attendance-october.csv', 'Attendance to 23 Oct'], ['samples/sample-attendance-december.csv', 'Attendance to 11 Dec']]) {
+      const buf = await fetch(file).then((r) => { if (!r.ok) throw new Error(); return r.arrayBuffer(); });
+      IMP = { kind: 'att', file, wb: XLSX.read(buf, { type: 'array', raw: false }), dropName: name };
+      IMP.sheet = IMP.wb.SheetNames[0];
+      const real = stepMapAtt; stepMapAtt = () => {}; try { prepareSheet(); } finally { stepMapAtt = real; }
+      const res = buildAtt(); if (res.error) throw new Error(res.error);
+      WB.att.push({ id: Math.random(), name, added: new Date().toISOString(), records: res.records });
+    }
     closeModal(); CUR = WB.drops.length - 1; DIRTY = false; render(); toast('Sample data loaded (made-up students)');
   } catch (e) { WB = null; render(); toast('Could not load the sample files'); }
 }
@@ -761,8 +960,7 @@ $('#openFile').onchange = async (e) => {
   try {
     const d = JSON.parse(await f.text());
     if (!d.drops) throw new Error();
-    d.settings = { ...DEFAULT_SETTINGS, ...d.settings };
-    WB = d; CUR = WB.drops.length - 1; DIRTY = false; remember(); render(); toast(`Opened ${f.name}`);
+    WB = fixWorkbook(d); CUR = WB.drops.length - 1; DIRTY = false; remember(); render(); toast(`Opened ${f.name}`);
   } catch { toast('That file is not a Year 12 progress workbook'); }
   e.target.value = '';
 };
@@ -779,6 +977,8 @@ $('#setBtn').onclick = () => {
           <div class="field">Grades below target in any one subject<input type="number" min="1" id="sFar" value="${S.farBelow}"></div>
           <div class="field">Indicators down since last drop (at least)<input type="number" min="1" id="sDrop" value="${S.dropMin}"></div>
           <div class="field">Subjects with working grade down (at least)<input type="number" min="1" id="sWag" value="${S.wagDropMin}"></div>
+          <div class="field">Attendance below (%)<input type="number" min="50" max="100" step="0.5" id="sAtt" value="${S.attMin}"></div>
+          <div class="field">Attendance down by (points)<input type="number" min="0.5" step="0.5" id="sAttDrop" value="${S.attDrop}"></div>
         </div>
         <h3 style="font-size:15px;margin:16px 0 8px">Tutor groups and tutors</h3>
         <div class="field">One per line, e.g. 12A = EOL<textarea id="sForms" rows="8">${Object.entries(S.forms).map(([f, t]) => `${f} = ${t}`).join('\n')}</textarea></div>
@@ -787,16 +987,20 @@ $('#setBtn').onclick = () => {
       <div>
         <h3 style="font-size:15px;margin-bottom:8px">Data drops</h3>
         ${WB.drops.length ? `<table class="t">${WB.drops.map((d, i) => `<tr><td><input data-dn="${i}" value="${esc(d.name)}" style="width:100%;border:1px solid var(--line);border-radius:5px;padding:4px 6px"></td><td class="n muted">${new Set(d.records.map((r) => r.sid)).size} students</td><td>${i ? `<button class="btn" data-up="${i}" title="Move earlier">↑</button>` : ''}</td><td><button class="btn" data-del="${i}">Remove</button></td></tr>`).join('')}</table><div class="note" style="margin-top:6px">Drops are compared in this order, oldest first.</div>` : '<div class="note">None yet.</div>'}
+        <h3 style="font-size:15px;margin:16px 0 8px">Attendance uploads</h3>
+        ${WB.att.length ? `<table class="t">${WB.att.map((d, i) => `<tr><td><input data-an="${i}" value="${esc(d.name)}" style="width:100%;border:1px solid var(--line);border-radius:5px;padding:4px 6px"></td><td class="n muted">${d.records.length} students</td><td><button class="btn" data-adel="${i}">Remove</button></td></tr>`).join('')}</table><div class="note" style="margin-top:6px">The most recent upload is used; the one before it is used for changes.</div>` : '<div class="note">None yet.</div>'}
         <h3 style="font-size:15px;margin:16px 0 8px">Clear everything</h3>
         <button class="btn" id="sClear">Remove all data from this page</button>
       </div>
     </div>
     <div class="mf"><button class="btn g" id="sSave">Save settings</button></div>`);
+  $$('[data-adel]').forEach((b) => b.onclick = () => { if (confirm(`Remove "${WB.att[+b.dataset.adel].name}"?`)) { WB.att.splice(+b.dataset.adel, 1); changed(); closeModal(); render(); } });
   $$('[data-del]').forEach((b) => b.onclick = () => { if (confirm(`Remove "${WB.drops[+b.dataset.del].name}"?`)) { WB.drops.splice(+b.dataset.del, 1); CUR = null; changed(); closeModal(); render(); } });
   $$('[data-up]').forEach((b) => b.onclick = () => { const i = +b.dataset.up; [WB.drops[i - 1], WB.drops[i]] = [WB.drops[i], WB.drops[i - 1]]; changed(); closeModal(); $('#setBtn').click(); render(); });
   $('#sClear').onclick = () => { if (confirm('Remove all data drops from this page? Save the workbook first if you want to keep them.')) { WB = null; DIRTY = false; try { localStorage.removeItem('y12-workbook'); } catch {} closeModal(); render(); } };
   $('#sSave').onclick = () => {
-    S.beMin = +$('#sBe').value || 2; S.belowMin = +$('#sBelow').value || 2; S.farBelow = +$('#sFar').value || 2; S.dropMin = +$('#sDrop').value || 2; S.wagDropMin = +$('#sWag').value || 2;
+    S.beMin = +$('#sBe').value || 2; S.belowMin = +$('#sBelow').value || 2; S.farBelow = +$('#sFar').value || 2; S.dropMin = +$('#sDrop').value || 2; S.wagDropMin = +$('#sWag').value || 2; S.attMin = +$('#sAtt').value || 90; S.attDrop = +$('#sAttDrop').value || 3;
+    $$('[data-an]').forEach((el) => { WB.att[+el.dataset.an].name = el.value.trim() || WB.att[+el.dataset.an].name; });
     S.forms = Object.fromEntries($('#sForms').value.split('\n').map((l) => l.split('=').map((x) => x.trim())).filter((p) => p[0]).map(([f, t]) => [normForm(f), t || '']));
     $$('[data-dn]').forEach((el) => { WB.drops[+el.dataset.dn].name = el.value.trim() || WB.drops[+el.dataset.dn].name; });
     S.remember = $('#sRem').checked;
@@ -805,7 +1009,7 @@ $('#setBtn').onclick = () => {
 };
 
 // ---------- start ----------
-try { const s = localStorage.getItem('y12-workbook'); if (s) { WB = JSON.parse(s); WB.settings = { ...DEFAULT_SETTINGS, ...WB.settings }; } } catch {}
+try { const s = localStorage.getItem('y12-workbook'); if (s) WB = fixWorkbook(JSON.parse(s)); } catch {}
 render();
 </script>
 </body>
